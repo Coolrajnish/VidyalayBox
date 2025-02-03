@@ -17,8 +17,10 @@ public interface IUserRepo extends GenericRepo<UserEntity, Long> {
    // UserEntity findByMobileNumber(String mobileNumber);
 //	Boolean existsByEmailAddress(final String email);
 //	boolean existsByMobileNumber(final String mobileNumber);
+   Optional<UserEntity> findByVerificationToken( String token);
 
     boolean existsByIdentityProvider(String admissionId);
+
     UserEntity findByUsername(String username);
   //  UserEntity findByIdentityProvider(String admissionId);
 

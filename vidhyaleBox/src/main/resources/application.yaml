@@ -21,6 +21,25 @@
 #    org.springframework.security: DEBUG
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: diwakermani@gmail.com
+    password: jsnhtjmxtwapdbxi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
   application:
     name: vidhyaleBox
 
@@ -39,3 +58,7 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+
+image:
+  storage:
+    path: D://

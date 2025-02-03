@@ -24,6 +24,26 @@
 	</properties>
 	
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+
+<!--		<dependency>-->
+<!--			<groupId>org.springframework</groupId>-->
+<!--			<artifactId>spring-context-support</artifactId>-->
+<!--			<version>7.0.0-M1</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.sun.mail</groupId>-->
+<!--			<artifactId>javax.mail</artifactId>-->
+<!--			<version>1.6.2</version>-->
+<!--		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+<!--		<dependency>-->
+<!--			<groupId>javax.mail</groupId>-->
+<!--			<artifactId>mail</artifactId>-->
+<!--			<version>1.5.0-b01</version>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
+
 		<dependency>
 			<groupId>com.ms</groupId>
 			<artifactId>ms-shared-api</artifactId>
@@ -63,6 +83,7 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
 			<artifactId>logstash-logback-encoder</artifactId>

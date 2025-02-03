@@ -13,6 +13,7 @@ import com.ms.vidhyalebox.parent.ParentEntity;
 import com.ms.vidhyalebox.parent.ParentMapperNormal;
 import com.ms.vidhyalebox.session.SessionRepo;
 import com.ms.vidhyalebox.user.IUserRepo;
+import com.ms.vidhyalebox.user.IUserService;
 import com.ms.vidhyalebox.user.UserEntity;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,11 @@ public class StudentMapperNormal implements IMapperNormal {
     private SessionRepo sessionRepo;
     private ParentMapperNormal parentMapper;
     private PasswordEncoder encode;
+    private IUserService userService;
+
 
     @Autowired
-    public StudentMapperNormal (PasswordEncoder encode, ParentMapperNormal parentMapper,SessionRepo sessionRepo,IParentRepo parentRepo,IOrgClientRepo orgClientRepo,IUserRepo userRepo,ClassRepo classRepo){
+    public StudentMapperNormal (IUserService userService,PasswordEncoder encode, ParentMapperNormal parentMapper,SessionRepo sessionRepo,IParentRepo parentRepo,IOrgClientRepo orgClientRepo,IUserRepo userRepo,ClassRepo classRepo){
     this.sessionRepo = sessionRepo;
     this.parentRepo = parentRepo;
     this.orgClientRepo = orgClientRepo;
@@ -41,6 +44,7 @@ public class StudentMapperNormal implements IMapperNormal {
     this.classRepo = classRepo;
     this.parentMapper = parentMapper;
     this.encode = encode;
+    this.userService = userService;
     }
 
     @Override
@@ -65,6 +69,8 @@ public class StudentMapperNormal implements IMapperNormal {
         user.setSchool(orgClientRepo.findByOrgUniqId(studentDTO.getOrgUniqId()).get());
         user.setRole("ROLE_STUDENT");
         user.setIdentityProvider(studentDTO.getIdentity());
+       // user.setImage(userService.saveImage(studentDTO.getStudentImage(), studentDTO.getOrgUniqId() +"_"+studentDTO.getIdentity()));
+
         UserEntity userEntity = userRepo.save(user);
         entity.setBloodGroup(studentDTO.getBloodgroup());
         entity.setEmergencyContact(studentDTO.getEmergencyContact());

@@ -1,6 +1,8 @@
 package com.ms.vidhyalebox.user;
 
+import com.ms.shared.api.auth.ParentSignupRequestDTO;
 import com.ms.shared.api.auth.SignupRequestDTO;
+import com.ms.shared.api.auth.studentDTO.StudentDTO;
 import com.ms.shared.api.generic.GenericDTO;
 import com.ms.shared.api.generic.GenericResponse;
 import com.ms.shared.api.generic.ModalDTO;
@@ -8,10 +10,14 @@ import com.ms.shared.api.generic.Notification;
 import com.ms.shared.util.util.bl.IGenericService;
 import com.ms.shared.util.util.domain.GenericEntity;
 import com.ms.shared.util.util.rest.GenericController;
+import com.ms.vidhyalebox.parent.ParentEntity;
+import com.ms.vidhyalebox.student.StudentEntity;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -24,12 +30,13 @@ import java.util.List;
 public class UserController extends GenericController<SignupRequestDTO, Long> {
 
 	private final UserServiceImpl _userService;
-
+	private final IUserRepo userRepo;
 	
-	public UserController(final UserServiceImpl userService
-                          ) {
+	public UserController(final UserServiceImpl userService, IUserRepo userRepo
+    ) {
 		_userService = userService;
-	}
+        this.userRepo = userRepo;
+    }
 
 	@Override
 	public IGenericService<GenericEntity, Long> getService() {
@@ -37,6 +44,10 @@ public class UserController extends GenericController<SignupRequestDTO, Long> {
 		return _userService;
 	}
 
+	@GetMapping("/test")
+	public String testUser( String token) {
+		return "Ok USer";
+	}
 
 	/*@PostMapping("/signup")
 	public ResponseEntity<UserEntity> signup(@RequestBody UserEntity userEntity) {
@@ -49,6 +60,8 @@ public class UserController extends GenericController<SignupRequestDTO, Long> {
 		String token = _userService.login(phoneNumber, password);
 		return ResponseEntity.ok(token);
 	}
+
+
 
 	/*@PostMapping("/logout")
 	public ResponseEntity<Void> logout() {

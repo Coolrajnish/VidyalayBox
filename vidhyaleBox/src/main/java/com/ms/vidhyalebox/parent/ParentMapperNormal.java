@@ -48,7 +48,7 @@ public class ParentMapperNormal implements IMapperNormal {
             user.setFirstName(parentDTO.getParentFirstName());
             user.setLastName(parentDTO.getParentLastName());
             user.setMobileNumber(parentDTO.getParentMobile());
-            user.setPassword(passwordEncoder.encode(parentDTO.getParentMobile()));
+            user.setPassword(passwordEncoder.encode(parentDTO.getParentMobile()));  //As of now mobile is the password for parent
             user.setSchool(org);
             user.setRole("ROLE_PARENT");
             userEntity = userRepo.save(user);

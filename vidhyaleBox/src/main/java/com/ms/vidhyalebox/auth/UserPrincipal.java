@@ -17,6 +17,7 @@ public class UserPrincipal implements UserDetails {
 
 	private Long id;
 	private String username;
+	private Long orgId;
 	private Boolean isAccountNonLocked;
 	private Boolean isAccountNonExpired;
 	private Boolean isCredentialsNonExpired;
@@ -28,11 +29,12 @@ public class UserPrincipal implements UserDetails {
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserPrincipal(final Long id, final String username, final String password, final Collection<? extends GrantedAuthority> authorities,
+	public UserPrincipal(final Long id, final String username,final Long orgId, final String password, final Collection<? extends GrantedAuthority> authorities,
 						 final Boolean isActive, final Boolean isAccountNonLocked,
 						 final Boolean isAccountNonExpired, final Boolean isCredentialsNonExpired, final String identity) {
 		this.id = id;
 		this.username = username;
+		this.orgId = orgId;
 		this.password = password;
 		this.authorities = authorities;
 		this.isActive = isActive;
@@ -49,6 +51,7 @@ public class UserPrincipal implements UserDetails {
 		return new UserPrincipal(
 				userEntity.getId(),
 				userEntity.getMobileNumber(),
+				userEntity.getSchool().getId(),
 				userEntity.getPassword(),
 				authorities,
 				userEntity.isActive(),
@@ -131,6 +134,10 @@ public class UserPrincipal implements UserDetails {
 
 	public Long getId() {
 		return this.id;
+	}
+
+	public Long getOrgId() {
+		return this.orgId;
 	}
 
 	@Override

@@ -19,6 +19,7 @@ public class LoginResponseDTO extends GenericDTO {
 	private final String _token;
 //	private final String _refreshToken;
 	private final Long _userId;
+	private final Long _orgId;
 	private final List<String> _roles;
 	private final boolean _active;
 	private final boolean _accountNonLocked;
@@ -26,6 +27,5 @@ public class LoginResponseDTO extends GenericDTO {
 	private final boolean _credentialNonExpired;
 	private final Long _expirationMS;
 	private final String _message;
-	
 
 }

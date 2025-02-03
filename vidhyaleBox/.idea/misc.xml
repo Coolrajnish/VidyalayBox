@@ -4,11 +4,11 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/../ms-shared-api/pom.xml" />
-        <option value="$PROJECT_DIR$/../ms-shared-util/pom.xml" />
+        <option value="$PROJECT_DIR$/../ms-shared-api/ms-shared-api/pom.xml" />
+        <option value="$PROJECT_DIR$/../ms-shared-util/ms-shared-util/pom.xml" />
+        <option value="$PROJECT_DIR$/vidhyaleBox/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_20" project-jdk-name="17" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK" />
 </project>

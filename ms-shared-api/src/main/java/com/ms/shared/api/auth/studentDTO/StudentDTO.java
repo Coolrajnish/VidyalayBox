@@ -5,6 +5,7 @@ import com.ms.shared.api.generic.GenericDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -39,8 +40,6 @@ public class StudentDTO extends GenericDTO {
 
     @NotEmpty(message = "Gender is mandatory")
     private String gender;
-
-    private String studentImage;
 
     private String studentMobile;
 

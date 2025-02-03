@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -81,5 +82,14 @@ public class UserEntity extends GenericEntity {
 
 	@Column(name = "identity_provider")
 	private String identityProvider;
+
+	@Column(name = "verificationToken")
+	private String verificationToken;
+
+	@Column(name = "expiryDate")
+	private LocalDateTime expiryDate;
+
+	@Column(name = "isVerified")
+	private boolean isVerified;
 
 }
