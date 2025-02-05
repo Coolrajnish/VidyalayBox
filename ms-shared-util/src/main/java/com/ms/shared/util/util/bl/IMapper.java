@@ -12,7 +12,7 @@ import java.util.List;
 public interface IMapper {
 
 	IMapper INSTANCE = Mappers.getMapper(IMapper.class);
-	
+
 	public GenericEntity dtoToEntity(final GenericDTO genericDTO);
 
 	public GenericDTO entityToDto(final GenericEntity genericEntity);

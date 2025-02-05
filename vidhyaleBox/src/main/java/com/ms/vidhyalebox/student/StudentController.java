@@ -5,8 +5,8 @@ import com.ms.shared.api.auth.ParentSignupRequestDTO;
 import com.ms.shared.api.auth.stream.StreamDTO;
 import com.ms.shared.api.auth.studentDTO.StudentDTO;
 import com.ms.shared.api.auth.studentDTO.StudentTransferDTO;
+import com.ms.shared.api.generic.APiResponse;
 import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.api.generic.GenericResponse;
 import com.ms.shared.api.generic.ModalDTO;
 import com.ms.shared.api.generic.Notification;
 import com.ms.shared.util.util.bl.IGenericService;
@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @CrossOrigin(origins = "*")
@@ -42,42 +43,36 @@ public class StudentController extends GenericController<StudentDTO, Long> {
     }
 
     @PostMapping("/transfer")
-    public GenericResponse registerOrg(@Valid @RequestBody List<StudentTransferDTO> studentTransferDTO) {
+    public ResponseEntity<APiResponse<Object>> registerOrg(@Valid @RequestBody List<StudentTransferDTO> studentTransferDTO) {
 
-        List<Notification> notifications = new ArrayList<>();
         boolean update =  _studentService.transferStudent(studentTransferDTO);
 
         if(!update){
-            Notification notification = new Notification();
-            notification.setNoificationCode("401");
-            notification.setNotificationDescription("Failed to transfer/promote student");
-            notifications.add(notification);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new APiResponse<>( "error",
+                    "Failed to transfer/promote student" ,
+                    null,
+                    null));
         }
 
-        if (!notifications.isEmpty()) {
-            GenericResponse genericResponse = new GenericResponse();
-            genericResponse.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-            genericResponse.setNotifications(notifications);
-
-            return genericResponse;
-        }
-
-        GenericResponse genericResponse = new GenericResponse();
-        genericResponse.setCode(HttpStatus.OK.getReasonPhrase());
-        Notification notification = new Notification();
-        notification.setNoificationCode("200");
-        notification.setNotificationDescription("Student transfered/promoted successfully");
-        notifications.add(notification);
-
-        return genericResponse;
+        return ResponseEntity.ok(new APiResponse<>( "success",
+                "Student transfered/promoted successfully",
+                null,
+                null
+        ));
     }
 
     @PostMapping(path = "/addstudent", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public String addStudent(@RequestPart("studentDTO") StudentDTO studentDTO, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<APiResponse<Object>> addStudent(@RequestPart("studentDTO") StudentDTO studentDTO, @RequestParam("image") MultipartFile image) {
 
-        String bool =  _studentService.addStudent(studentDTO, image);
+        _studentService.addStudent(studentDTO, image);
 
-        return bool;
+        return ResponseEntity.ok(new APiResponse<>(
+                "success",
+                "Student registered successfully",
+                Map.of("stufName" , studentDTO.getFirstName(),
+                        "stulName" , studentDTO.getLastName()),
+                null
+        ));
     }
 
     @Override

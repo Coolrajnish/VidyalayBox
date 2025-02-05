@@ -7,8 +7,6 @@ import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;
 import org.springframework.stereotype.Service;
 
-import static com.ms.shared.util.util.TILServiceUtil.convertToInteger;
-
 
 @Service
 public class OrgClientMapper implements IMapperNormal {

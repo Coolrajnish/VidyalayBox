@@ -5,6 +5,8 @@ import com.ms.shared.api.generic.GenericDTO;
 import com.ms.shared.util.util.bl.GenericService;
 import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;
+import com.ms.shared.util.util.repo.GenericRepo;
+import com.ms.shared.util.util.rest.InvalidItemException;
 import com.ms.vidhyalebox.addadmin.SchAdminEntity;
 import com.ms.vidhyalebox.addadmin.SchAdminRepo;
 import com.ms.vidhyalebox.role.RoleEntity;
@@ -48,7 +50,7 @@ public class OrgClientServiceImpl extends GenericService<GenericEntity, Long> im
         //  orgSignupRequestDTO.setPassword(passwordEncoder.encode(orgSignupRequestDTO.getPassword()));
         // Fetch the RoleEntity by role name (e.g., "ROLE_SCHOOL_ADMIN")
         RoleEntity role = roleRepo.findByName(orgSignupRequestDTO.getOrgAdminSignupRequestDTO().getRole())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid role specified"));
+                .orElseThrow(() -> new InvalidItemException("Invalid role specified"));
 
         OrgClientEntity orgClientEntity = (OrgClientEntity) orgClientMapper.dtoToEntity(orgSignupRequestDTO);
 

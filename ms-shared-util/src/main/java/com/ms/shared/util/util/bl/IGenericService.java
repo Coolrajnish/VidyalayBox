@@ -16,7 +16,7 @@ public interface IGenericService<E extends GenericEntity, K> {
 	public List<GenericDTO> getAllForAdmin() throws FatalException;
 
 	public List<GenericDTO> getAllLazy() throws FatalException;
-	
+
 	public List<GenericDTO> getFilters();
 
 	public GenericDTO add(final GenericDTO dto) throws FatalException;
@@ -25,11 +25,11 @@ public interface IGenericService<E extends GenericEntity, K> {
 
 	public GenericDTO patch(final Object id, final JsonPatch jsonPatch) throws FatalException;
 
-   public void deleteById(final Object id);
+	public void deleteById(final Object id);
 
-    void setAuthToken(String authToken);
+	void setAuthToken(String authToken);
 
-    // public Long processAllData(List<E> entityCollection) throws FatalException;
+	// public Long processAllData(List<E> entityCollection) throws FatalException;
 
 	// public List<GenericDTO> getAll(String clientId) throws FatalException;
 

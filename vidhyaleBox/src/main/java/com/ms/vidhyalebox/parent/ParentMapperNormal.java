@@ -2,11 +2,9 @@ package com.ms.vidhyalebox.parent;
 
 import com.ms.shared.api.auth.ParentSignupRequestDTO;
 import com.ms.shared.api.auth.ParentSignupResponseDTO;
-import com.ms.shared.api.auth.studentDTO.StudentDTO;
 import com.ms.shared.api.generic.GenericDTO;
 import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.vidhyalebox.addadmin.SchAdminEntity;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientMapper;

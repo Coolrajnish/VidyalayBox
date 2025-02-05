@@ -1,7 +1,6 @@
 package com.ms.vidhyalebox.student;
 
 import com.ms.shared.api.auth.ParentSignupRequestDTO;
-import com.ms.shared.api.auth.shiftDTO.ShiftDTO;
 import com.ms.shared.api.auth.studentDTO.StudentDTO;
 import com.ms.shared.api.generic.GenericDTO;
 import com.ms.shared.util.util.bl.IMapperNormal;
@@ -19,8 +18,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class StudentMapperNormal implements IMapperNormal {
@@ -50,39 +47,40 @@ public class StudentMapperNormal implements IMapperNormal {
     @Override
     public GenericEntity dtoToEntity(GenericDTO genericDto, GenericEntity genericEntity) {
 
-        StudentEntity entity = genericEntity == null ? new StudentEntity() : (StudentEntity) genericEntity;
-        StudentDTO studentDTO = (StudentDTO) genericDto;
-        boolean userval = userRepo.existsByIdentityProvider(studentDTO.getIdentity());
-        if(userval){
-           throw new EntityNotFoundException("Please contact support");
-        }
-        ParentSignupRequestDTO parentSignupRequestDTO = studentDTO.getParentSignupRequestDTO();
-        ParentEntity parent = (ParentEntity) parentMapper.dtoToEntity(parentSignupRequestDTO);
-        parent =  parentRepo.save(parent);
-        UserEntity user = new UserEntity();
-        user.setAddress(studentDTO.getCurrentAddr());
-        user.setEmail(studentDTO.getStudentEmail() != null ? studentDTO.getStudentEmail() : studentDTO.getParentSignupRequestDTO().getParentEmail());
-        user.setFirstName(studentDTO.getFirstName());
-        user.setLastName(studentDTO.getLastName());
-        user.setMobileNumber(studentDTO.getStudentMobile());
-        user.setPassword(studentDTO.getStudentPWD() != null ?encode.encode( studentDTO.getStudentPWD() ): encode.encode( studentDTO.getParentSignupRequestDTO().getParentMobile()));
-        user.setSchool(orgClientRepo.findByOrgUniqId(studentDTO.getOrgUniqId()).get());
-        user.setRole("ROLE_STUDENT");
-        user.setIdentityProvider(studentDTO.getIdentity());
-       // user.setImage(userService.saveImage(studentDTO.getStudentImage(), studentDTO.getOrgUniqId() +"_"+studentDTO.getIdentity()));
-
-        UserEntity userEntity = userRepo.save(user);
-        entity.setBloodGroup(studentDTO.getBloodgroup());
-        entity.setEmergencyContact(studentDTO.getEmergencyContact());
-        entity.setActive(studentDTO.isActive());
-        entity.setClassEntity(classRepo.findById(Long.valueOf(studentDTO.getClassSection())).get());
-        entity.setParentEntity(parent);
-        entity.setUser(userEntity);
-        entity.setSessionEntity(sessionRepo.findById(Long.valueOf(studentDTO.getSessionYear())).get());
-        entity.setSchool(orgClientRepo.findByOrgUniqId(studentDTO.getOrgUniqId()).get());
-        entity.setAdmissionDate(studentDTO.getAdmissionDate());
-        entity.setPermanentAddress(studentDTO.getPermanentAddr());
-        return entity;
+//        StudentEntity entity = genericEntity == null ? new StudentEntity() : (StudentEntity) genericEntity;
+//        StudentDTO studentDTO = (StudentDTO) genericDto;
+//        boolean userval = userRepo.existsByIdentityProvider(studentDTO.getIdentity());
+//        if(userval){
+//           throw new EntityNotFoundException("Please contact support");
+//        }
+//        ParentSignupRequestDTO parentSignupRequestDTO = studentDTO.getParentSignupRequestDTO();
+//        ParentEntity parent = (ParentEntity) parentMapper.dtoToEntity(parentSignupRequestDTO);
+//        parent =  parentRepo.save(parent);
+//        UserEntity user = new UserEntity();
+//        user.setAddress(studentDTO.getCurrentAddr());
+//        user.setEmail(studentDTO.getStudentEmail() != null ? studentDTO.getStudentEmail() : studentDTO.getParentSignupRequestDTO().getParentEmail());
+//        user.setFirstName(studentDTO.getFirstName());
+//        user.setLastName(studentDTO.getLastName());
+//        user.setMobileNumber(studentDTO.getStudentMobile());
+//        user.setPassword(studentDTO.getStudentPWD() != null ?encode.encode( studentDTO.getStudentPWD() ): encode.encode( studentDTO.getParentSignupRequestDTO().getParentMobile()));
+//        user.setSchool(orgClientRepo.findByOrgUniqId(studentDTO.getOrgUniqId()).get());
+//        user.setRole("ROLE_STUDENT");
+//        user.setIdentityProvider(studentDTO.getIdentity());
+//       // user.setImage(userService.saveImage(studentDTO.getStudentImage(), studentDTO.getOrgUniqId() +"_"+studentDTO.getIdentity()));
+//
+//        UserEntity userEntity = userRepo.save(user);
+//        entity.setBloodGroup(studentDTO.getBloodgroup());
+//        entity.setEmergencyContact(studentDTO.getEmergencyContact());
+//        entity.setActive(studentDTO.isActive());
+//        entity.setClassEntity(classRepo.findById(Long.valueOf(studentDTO.getClassSection())).get());
+//        entity.setParentEntity(parent);
+//        entity.setUser(userEntity);
+//        entity.setSessionEntity(sessionRepo.findById(Long.valueOf(studentDTO.getSessionYear())).get());
+//        entity.setSchool(orgClientRepo.findByOrgUniqId(studentDTO.getOrgUniqId()).get());
+//        entity.setAdmissionDate(studentDTO.getAdmissionDate());
+//        entity.setPermanentAddress(studentDTO.getPermanentAddr());
+//        return entity;
+        return null;
     }
 
     @Override

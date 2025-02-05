@@ -1,6 +1,5 @@
 package com.ms.vidhyalebox.addadmin;
 
-import com.ms.shared.api.auth.OrgAdminSignupRequestDTO;
 import com.ms.shared.api.generic.GenericDTO;
 import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;

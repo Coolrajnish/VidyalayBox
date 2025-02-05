@@ -2,10 +2,13 @@ package com.ms.vidhyalebox.user;
 
 import com.ms.shared.api.auth.SignupRequestDTO;
 import com.ms.shared.api.auth.StaffSignupRequestDTO;
+import com.ms.shared.api.generic.APiResponse;
 import com.ms.shared.api.generic.GenericDTO;
 import com.ms.shared.util.util.bl.GenericService;
 import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;
+import com.ms.shared.util.util.repo.GenericRepo;
+import com.ms.shared.util.util.rest.UnknownErrorException;
 import com.ms.vidhyalebox.auth.JwtTokenProvider;
 import com.ms.vidhyalebox.emailsender.EmailDetails;
 import com.ms.vidhyalebox.emailsender.EmailService;
@@ -17,6 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,15 +56,15 @@ public class UserServiceImpl extends GenericService<GenericEntity, Long> impleme
 	private final RoleRepo roleRepo;
 	private final EmailService emailService;
 
-    public UserServiceImpl(IUserRepo userRepository, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, UserMapperNormal userMapperNormal, RoleRepo roleRepo, EmailService emailService) {
-        this.userRepository = userRepository;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
-        this.userMapperNormal = userMapperNormal;
+	public UserServiceImpl(IUserRepo userRepository, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, UserMapperNormal userMapperNormal, RoleRepo roleRepo, EmailService emailService) {
+		this.userRepository = userRepository;
+		this.authenticationManager = authenticationManager;
+		this.jwtTokenProvider = jwtTokenProvider;
+		this.passwordEncoder = passwordEncoder;
+		this.userMapperNormal = userMapperNormal;
 		this.roleRepo = roleRepo;
-        this.emailService = emailService;
-    }
+		this.emailService = emailService;
+	}
 
 	public GenericDTO signup(SignupRequestDTO signupRequestDTO) {
 		// Encode the password
@@ -92,38 +97,69 @@ public class UserServiceImpl extends GenericService<GenericEntity, Long> impleme
 	}
 
 	@Override
-	public void initiatePWDReset(String email) {
-		Optional<UserEntity> userop = userRepository.findByEmailOrMobileNumber(email, null);
-		if (userop.isPresent()) {
-			UserEntity user = userop.get();
-			String token = UUID.randomUUID().toString();
-			user.setVerificationToken(token);
-			user.setExpiryDate(LocalDateTime.now().plusHours(1)); // Token valid for 1 hour
+	public ResponseEntity<APiResponse<Object>> initiatePWDReset(String email) {
+		String val = "";
+		Optional<UserEntity> userop = null;
+		try {
+			userop = userRepository.findByEmailOrMobileNumber(email, null);
+			if (userop.isPresent()) {
+				UserEntity user = userop.get();
+				String token = UUID.randomUUID().toString();
+				user.setVerificationToken(token);
+				user.setExpiryDate(LocalDateTime.now().plusHours(1)); // Token valid for 1 hour
 
-			userRepository.save(user);
-			EmailDetails edetails = new EmailDetails();
-			edetails.setRecipient(email);
-			edetails.setSubject("VidyalayBox password reset mail");
-			edetails.setMsgBody("Click to initiate password reset http://localhost:5173/forget-password?token="+token);
-			emailService.sendSimpleMail(edetails);
+				userRepository.save(user);
+				EmailDetails edetails = new EmailDetails();
+				edetails.setRecipient(email);
+				edetails.setSubject("VidyalayBox password reset mail");
+				edetails.setMsgBody("Click to initiate password reset http://localhost:5173/forget-password?token="+token);
+				val = emailService.sendSimpleMail(edetails);
+			}
+		} catch (Exception e) {
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APiResponse<>(
+					"error",
+					"Failed to send mail" + e.getLocalizedMessage() ,
+					null,
+					null
+			));
 		}
+
+		APiResponse <Object> resp =  new APiResponse<>(
+				userop.isPresent() && !val.contains("error") ?  "success" : "error",
+				userop.isPresent() ? (val.contains("error") ? "Failed to send mail"  :  "Password reset link sent over mail" ) :  "User not found with the provided details",
+				null,
+				null
+		);
+
+		return  userop.isPresent() ? ResponseEntity.ok(resp) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
 	}
 
 	// Method to validate reset token and reset password
 	public boolean validateResetToken(String token) {
 		Optional<UserEntity> usere = userRepository.findByVerificationToken(token);
 
-        return usere.isPresent() && usere.get().getExpiryDate().isAfter(LocalDateTime.now());
-    }
+		return usere.isPresent() && usere.get().getExpiryDate().isAfter(LocalDateTime.now());
+	}
 
-	public void resetPassword(String token, String newPassword) {
-		Optional<UserEntity> usere = userRepository.findByVerificationToken(token);
-		if (usere.isPresent() && !usere.get().getExpiryDate().isAfter(LocalDateTime.now())) {
-			UserEntity user = usere.get();
-			user.setVerificationToken(null);
-			user.setPassword(passwordEncoder.encode(newPassword)); // You should hash the password
-			userRepository.save(user);
+	public APiResponse<Object> resetPassword(String token, String newPassword) {
+		Optional<UserEntity> usere = null;
+		try {
+			usere = userRepository.findByVerificationToken(token);
+			if (usere.isPresent() && !usere.get().getExpiryDate().isAfter(LocalDateTime.now())) {
+				UserEntity user = usere.get();
+				user.setVerificationToken(null);
+				user.setPassword(passwordEncoder.encode(newPassword)); // You should hash the password
+				userRepository.save(user);
+			}
+		} catch (Exception e) {
+			throw new UnknownErrorException("Unknown error occurred, password reset failed");
 		}
+		return new APiResponse<>(
+				usere.isPresent() ?  "success" : "error",
+				usere.isPresent() ? "Password reset done" : "Token not found, password reset failed",
+				null,
+				null
+		);
 	}
 
 	@Override
@@ -172,26 +208,26 @@ public class UserServiceImpl extends GenericService<GenericEntity, Long> impleme
 		String sanitizedFileName = sanitizeFileName(file.getOriginalFilename());
 
 		// Create directory structure (e.g., storagePath/images/2025/02/02/filename.jpg)
-	//	String dateDir = new java.text.SimpleDateFormat("yyyy/MM/dd").format(new Date());
+		//	String dateDir = new java.text.SimpleDateFormat("yyyy/MM/dd").format(new Date());
 		Path directory = Paths.get(storagePath, foldername);
-        Path filePath = null;
-        try {
-            if (!Files.exists(directory)) {
-                Files.createDirectories(directory);
-            }
+		Path filePath = null;
+		try {
+			if (!Files.exists(directory)) {
+				Files.createDirectories(directory);
+			}
 
-            // Store the file (inside the generated directory)
-            filePath = directory.resolve(sanitizedFileName);
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+			// Store the file (inside the generated directory)
+			filePath = directory.resolve(sanitizedFileName);
+			Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            // Ensure file permissions (readable by the server, not publicly accessible)
-            //setFilePermissions(filePath);
+			// Ensure file permissions (readable by the server, not publicly accessible)
+			//setFilePermissions(filePath);
 			System.out.println("foldername "+filePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-        return filePath.toString();
+		return filePath.toString();
 	}
 
 	public Resource getImage(Long userId) {
@@ -226,8 +262,8 @@ public class UserServiceImpl extends GenericService<GenericEntity, Long> impleme
 
 	public UserDetails loadUserByUsername(String username) {
 
-        return null;
-    }
+		return null;
+	}
 
 	@Override
 	public JpaRepository getRepo() {
@@ -241,6 +277,6 @@ public class UserServiceImpl extends GenericService<GenericEntity, Long> impleme
 
 	public boolean isEmailAlreadyExist(String emailAddress) {
 
-return false;
+		return false;
 	}
 }

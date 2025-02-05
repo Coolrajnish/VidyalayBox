@@ -132,46 +132,46 @@ public class UserController extends GenericController<SignupRequestDTO, Long> {
 		return ResponseEntity.ok(userVerificationResponseDTO);
 	}*/
 
-	@PostMapping("/add-user")
-	public GenericResponse registerUser(@Valid @RequestHeader("Authorization") @RequestBody SignupRequestDTO signupRequestDTO) {
-
-		List<Notification> notifications = new ArrayList<>();
-
-      /*  if (_iUserService.isEmailAlreadyExist(signupRequestDTO.getEmailAddress())) {
-            Notification notification = new Notification();
-            notification.setNoificationCode("401");
-            notification.setNotificationDescription("User's email address already exists");
-            notifications.add(notification);
-        }*/
-
-     /*   if (_iUserService.isMobileNumberExist(signupRequestDTO.getIsdCode().concat(signupRequestDTO.getMobileNumber()))) {
-            Notification notification = new Notification();
-            notification.setNoificationCode("401");
-            notification.setNotificationDescription("User's Phone Number already exists");
-            notifications.add(notification);
-        }*/
-
-		if (!notifications.isEmpty()) {
-
-			GenericResponse genericResponse = new GenericResponse();
-			genericResponse.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-			genericResponse.setNotifications(notifications);
-
-			return genericResponse;
-		}
-
-		GenericDTO genericDTO = _userService.signup(signupRequestDTO);
-
-		List<GenericDTO> genericDTOs = new ArrayList<>();
-		genericDTOs.add(genericDTO);
-
-		ModalDTO modalDTO = new ModalDTO();
-		modalDTO.setData(genericDTOs);
-
-		GenericResponse genericResponse = new GenericResponse();
-		genericResponse.setCode(HttpStatus.OK.getReasonPhrase());
-		genericResponse.setModalDTO(modalDTO);
-
-		return genericResponse;
-	}
+//	@PostMapping("/add-user")
+//	public GenericResponse registerUser(@Valid @RequestHeader("Authorization") @RequestBody SignupRequestDTO signupRequestDTO) {
+//
+//		List<Notification> notifications = new ArrayList<>();
+//
+//      /*  if (_iUserService.isEmailAlreadyExist(signupRequestDTO.getEmailAddress())) {
+//            Notification notification = new Notification();
+//            notification.setNoificationCode("401");
+//            notification.setNotificationDescription("User's email address already exists");
+//            notifications.add(notification);
+//        }*/
+//
+//     /*   if (_iUserService.isMobileNumberExist(signupRequestDTO.getIsdCode().concat(signupRequestDTO.getMobileNumber()))) {
+//            Notification notification = new Notification();
+//            notification.setNoificationCode("401");
+//            notification.setNotificationDescription("User's Phone Number already exists");
+//            notifications.add(notification);
+//        }*/
+//
+//		if (!notifications.isEmpty()) {
+//
+//			GenericResponse genericResponse = new GenericResponse();
+//			genericResponse.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+//			genericResponse.setNotifications(notifications);
+//
+//			return genericResponse;
+//		}
+//
+//		GenericDTO genericDTO = _userService.signup(signupRequestDTO);
+//
+//		List<GenericDTO> genericDTOs = new ArrayList<>();
+//		genericDTOs.add(genericDTO);
+//
+//		ModalDTO modalDTO = new ModalDTO();
+//		modalDTO.setData(genericDTOs);
+//
+//		GenericResponse genericResponse = new GenericResponse();
+//		genericResponse.setCode(HttpStatus.OK.getReasonPhrase());
+//		genericResponse.setModalDTO(modalDTO);
+//
+//		return genericResponse;
+//	}
 }

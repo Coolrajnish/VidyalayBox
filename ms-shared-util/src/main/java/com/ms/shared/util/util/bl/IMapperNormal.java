@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IMapperNormal {
-	
+
 	public List<GenericDTO> filters = new ArrayList<>();
 
 	default List<GenericEntity> dtoToEntity(final List<GenericDTO> genericDTOs) {
@@ -65,25 +65,25 @@ public interface IMapperNormal {
 		return genericDTOs;
 	}
 	public default GenericDTO dtoToDto(final GenericDTO genericDTO) {
-		
+
 		//will be implemented in child class, by default returning same object
 		return genericDTO;
 	}
 
 	public default GenericEntity dtoToEntity(final GenericDTO genericDTO, GenericEntity genericEntity)
 	{
-		
+
 		//will be implemented in child class, by default returning same object
 		return new GenericEntity();
 	}
-	
+
 	public default GenericEntity dtoToEntity(final GenericDTO genericDTO)
 	{
 		GenericEntity genericEntity = dtoToEntity(genericDTO, null);
-		
+
 		return genericEntity;
 	}
-	
+
 	public default GenericDTO entityToDto(final GenericEntity genericEntity)
 	{
 		//will be implemented in child class, by default returning same object
@@ -94,7 +94,7 @@ public interface IMapperNormal {
 		//will be implemented in child class, by default returning same object
 		return new GenericDTO();
 	}
-	
+
 	public default GenericDTO entityToDtoLazy(final GenericEntity genericEntity)
 	{
 		//will be implemented in child class, by default returning same object

@@ -6,6 +6,8 @@ import com.ms.shared.api.auth.studentDTO.StudentTransferDTO;
 import com.ms.shared.util.util.bl.GenericService;
 import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;
+import com.ms.shared.util.util.repo.GenericRepo;
+import com.ms.shared.util.util.rest.InvalidItemException;
 import com.ms.vidhyalebox.Class.ClassRepo;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.parent.IParentRepo;
@@ -74,13 +76,14 @@ public class StudentServiceImpl extends GenericService<GenericEntity, Long> impl
         return bool;
     }
 
+    @Transactional
     @Override
     public String addStudent(StudentDTO studentDTO, MultipartFile image) {
 
         StudentEntity entity =  new StudentEntity() ;
         boolean userval = userRepo.existsByIdentityProvider(studentDTO.getIdentity());
         if(userval){
-            throw new EntityNotFoundException("Please contact support student identity already exists");
+            throw new InvalidItemException("Please contact support student identity already exists");
         }
         ParentSignupRequestDTO parentSignupRequestDTO = studentDTO.getParentSignupRequestDTO();
         ParentEntity parent = (ParentEntity) parentMapper.dtoToEntity(parentSignupRequestDTO);

@@ -1,11 +1,14 @@
 package com.ms.vidhyalebox.classsubject;
 
 import com.ms.shared.api.auth.classsubjectDTO.ClassSubjectDTO;
+import com.ms.shared.api.generic.APiResponse;
 import com.ms.shared.api.generic.GenericResponse;
 import com.ms.shared.api.generic.Notification;
 import com.ms.shared.util.util.bl.GenericService;
 import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;
+import com.ms.shared.util.util.repo.GenericRepo;
+import com.ms.shared.util.util.rest.UnknownErrorException;
 import com.ms.vidhyalebox.addadmin.SchAdminEntity;
 import com.ms.vidhyalebox.addadmin.SchAdminRepo;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
@@ -13,6 +16,7 @@ import com.ms.vidhyalebox.subject.SubjectEntity;
 import com.ms.vidhyalebox.subject.SubjectRepo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +50,7 @@ public class ClassSubjectServiceImpl extends GenericService<GenericEntity, Long>
 
     @Transactional
     @Override
-    public GenericResponse MapClassSubject(ClassSubjectDTO classSubjectDTO) {
+    public ResponseEntity<APiResponse<Object>> MapClassSubject(ClassSubjectDTO classSubjectDTO) {
         List<Notification> notifications = new ArrayList<>();
         try {
             for (Long coreId : classSubjectDTO.getCoreSubject()) {
@@ -72,29 +76,15 @@ public class ClassSubjectServiceImpl extends GenericService<GenericEntity, Long>
                 subjectRepo.save(entity);
             }
         } catch (Exception e) {
-            Notification notification = new Notification();
-            notification.setNoificationCode("401");
-            notification.setNotificationDescription("Failed to transfer/promote student");
-            notifications.add(notification);
 
-         //   throw new RuntimeException(e);
+            throw new UnknownErrorException("Failed to map class with subject - "+e.getMessage());
         }
 
-        if (!notifications.isEmpty()) {
-            GenericResponse genericResponse = new GenericResponse();
-            genericResponse.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-            genericResponse.setNotifications(notifications);
-
-            return genericResponse;
-        }
-
-        GenericResponse genericResponse = new GenericResponse();
-        genericResponse.setCode(HttpStatus.OK.getReasonPhrase());
-        Notification notification = new Notification();
-        notification.setNoificationCode("200");
-        notification.setNotificationDescription("Class and subject mapped successfully");
-        notifications.add(notification);
-
-        return genericResponse;
+        return ResponseEntity.ok(new APiResponse<>(
+                "success",
+                "Class and subject mapped successfully",
+                null,
+                null
+        ));
     }
 }

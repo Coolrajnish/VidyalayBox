@@ -3,6 +3,7 @@ package com.ms.vidhyalebox.session;
 import com.ms.shared.util.util.bl.GenericService;
 import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;
+import com.ms.shared.util.util.repo.GenericRepo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 

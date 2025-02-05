@@ -14,7 +14,7 @@ import lombok.ToString;
 @Table(name = "medium")
 public class MediumEntity extends GenericEntity {
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
     @JoinColumn(name = "orgUniqId", nullable = false)
     private OrgClientEntity school;
 

@@ -3,6 +3,7 @@ package com.ms.vidhyalebox.classsubject;
 import com.ms.shared.api.auth.classsubjectDTO.ClassSubjectDTO;
 import com.ms.shared.api.auth.classsubjectDTO.ElectSubDTO;
 import com.ms.shared.api.auth.studentDTO.StudentTransferDTO;
+import com.ms.shared.api.generic.APiResponse;
 import com.ms.shared.api.generic.GenericResponse;
 import com.ms.shared.api.generic.Notification;
 import com.ms.shared.util.util.bl.IGenericService;
@@ -11,6 +12,7 @@ import com.ms.shared.util.util.rest.GenericController;
 import com.ms.vidhyalebox.subject.SubjectEntity;
 import com.ms.vidhyalebox.subject.SubjectRepo;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,9 +44,8 @@ public class ClassSubjectController extends GenericController<ClassSubjectDTO, L
 
 
     @PostMapping("/mapclasssub")
-    public GenericResponse registerOrg(@Valid @RequestBody ClassSubjectDTO classSubjectDTO) {
+    public ResponseEntity<APiResponse<Object>> registerOrg(@Valid @RequestBody ClassSubjectDTO classSubjectDTO) {
 
-        GenericResponse genericResponse =   _classSubjectService.MapClassSubject(classSubjectDTO);
-        return genericResponse;
+        return _classSubjectService.MapClassSubject(classSubjectDTO);
     }
 }

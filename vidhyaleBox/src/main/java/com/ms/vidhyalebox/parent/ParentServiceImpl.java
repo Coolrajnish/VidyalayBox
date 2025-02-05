@@ -6,6 +6,7 @@ import com.ms.shared.api.generic.GenericDTO;
 import com.ms.shared.util.util.bl.GenericService;
 import com.ms.shared.util.util.bl.IMapperNormal;
 import com.ms.shared.util.util.domain.GenericEntity;
+import com.ms.shared.util.util.repo.GenericRepo;
 import com.ms.vidhyalebox.auth.JwtTokenProvider;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.role.RoleEntity;
