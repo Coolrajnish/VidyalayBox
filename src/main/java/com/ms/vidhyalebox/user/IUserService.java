@@ -1,22 +1,26 @@
 package com.ms.vidhyalebox.user;
 
 
-import com.ms.shared.api.auth.*;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.util.util.bl.IGenericService;
-import com.ms.shared.util.util.domain.GenericEntity;
+import javax.validation.Valid;
+
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
+import com.ms.vidhyalebox.sharedapi.SignupRequestDTO;
+import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 public interface IUserService extends IGenericService<GenericEntity, Long> {
 
     //boolean isEmailAlreadyExist(final String emailAddress);
+    public APiResponse<Object> resetPassword(String token, String newPassword);
     public GenericDTO signup(@Valid SignupRequestDTO SignupRequestDTO);
     public boolean isMobileNumberExist(final String MobileNumber);
     public boolean verifyUser(String token);
-    public void initiatePWDReset(String email);
+    public ResponseEntity<APiResponse<Object>> initiatePWDReset(String email);
     public String saveImage(MultipartFile file, String foldername);
     public Resource getImage(Long userId);
 //	public boolean logout(LoginRequestDTO userDTO);

@@ -1,21 +1,20 @@
 package com.ms.vidhyalebox.parent;
 
-import com.ms.shared.api.auth.ParentSignupRequestDTO;
-import com.ms.shared.api.auth.ParentSignupResponseDTO;
-import com.ms.shared.api.auth.studentDTO.StudentDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.vidhyalebox.addadmin.SchAdminEntity;
-import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
-import com.ms.vidhyalebox.orgclient.OrgClientEntity;
-import com.ms.vidhyalebox.orgclient.OrgClientMapper;
-import com.ms.vidhyalebox.user.IUserRepo;
-import com.ms.vidhyalebox.user.UserEntity;
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
+import com.ms.vidhyalebox.orgclient.OrgClientEntity;
+import com.ms.vidhyalebox.orgclient.OrgClientMapper;
+import com.ms.vidhyalebox.sharedapi.ParentSignupRequestDTO;
+import com.ms.vidhyalebox.sharedapi.ParentSignupResponseDTO;
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.user.IUserRepo;
+import com.ms.vidhyalebox.user.UserEntity;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 @Service
 public class ParentMapperNormal implements IMapperNormal {

@@ -1,22 +1,22 @@
 package com.ms.vidhyalebox.orgclient;
 
-import com.ms.shared.api.auth.OrgSignupRequestDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.util.util.bl.GenericService;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.vidhyalebox.addadmin.SchAdminEntity;
-import com.ms.vidhyalebox.addadmin.SchAdminRepo;
-import com.ms.vidhyalebox.role.RoleEntity;
-import com.ms.vidhyalebox.role.RoleRepo;
-import com.ms.vidhyalebox.user.IUserRepo;
-import com.ms.vidhyalebox.user.IUserService;
-import com.ms.vidhyalebox.user.UserEntity;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.ms.vidhyalebox.addadmin.SchAdminEntity;
+import com.ms.vidhyalebox.addadmin.SchAdminRepo;
+import com.ms.vidhyalebox.role.RoleEntity;
+import com.ms.vidhyalebox.role.RoleRepo;
+import com.ms.vidhyalebox.sharedapi.OrgSignupRequestDTO;
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.user.IUserRepo;
+import com.ms.vidhyalebox.user.UserEntity;
+import com.ms.vidhyalebox.util.bl.GenericService;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.InvalidItemException;
 
 @Service
 public class OrgClientServiceImpl extends GenericService<GenericEntity, Long> implements IOrgClientService {
@@ -48,7 +48,7 @@ public class OrgClientServiceImpl extends GenericService<GenericEntity, Long> im
         //  orgSignupRequestDTO.setPassword(passwordEncoder.encode(orgSignupRequestDTO.getPassword()));
         // Fetch the RoleEntity by role name (e.g., "ROLE_SCHOOL_ADMIN")
         RoleEntity role = roleRepo.findByName(orgSignupRequestDTO.getOrgAdminSignupRequestDTO().getRole())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid role specified"));
+                .orElseThrow(() -> new InvalidItemException("Invalid role specified"));
 
         OrgClientEntity orgClientEntity = (OrgClientEntity) orgClientMapper.dtoToEntity(orgSignupRequestDTO);
 

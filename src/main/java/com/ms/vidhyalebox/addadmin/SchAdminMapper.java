@@ -1,10 +1,10 @@
 package com.ms.vidhyalebox.addadmin;
 
-import com.ms.shared.api.auth.OrgAdminSignupRequestDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
 import org.springframework.stereotype.Service;
+
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 @Service
 public class SchAdminMapper implements IMapperNormal {

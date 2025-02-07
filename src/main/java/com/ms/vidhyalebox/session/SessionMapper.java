@@ -1,14 +1,13 @@
 package com.ms.vidhyalebox.session;
 
-import com.ms.shared.api.auth.mediumDTO.MediumDTO;
-import com.ms.shared.api.auth.sessionDTO.SessionDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
-import com.mysql.cj.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.sharedapi.sessionDTO.SessionDTO;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 @Service
 public class SessionMapper implements IMapperNormal {

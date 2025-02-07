@@ -1,13 +1,12 @@
 package com.ms.vidhyalebox.orgclient;
 
-import com.ms.shared.api.auth.OrgSignupRequestDTO;
-import com.ms.shared.api.auth.OrgSignupResponseDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
 import org.springframework.stereotype.Service;
 
-import static com.ms.shared.util.util.TILServiceUtil.convertToInteger;
+import com.ms.vidhyalebox.sharedapi.OrgSignupRequestDTO;
+import com.ms.vidhyalebox.sharedapi.OrgSignupResponseDTO;
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 
 @Service

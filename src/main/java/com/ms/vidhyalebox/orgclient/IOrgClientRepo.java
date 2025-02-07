@@ -1,9 +1,10 @@
 package com.ms.vidhyalebox.orgclient;
 
-import com.ms.shared.util.util.repo.GenericRepo;
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.ms.vidhyalebox.util.repo.GenericRepo;
 
 @Repository
 public interface IOrgClientRepo extends GenericRepo<OrgClientEntity,Long> {

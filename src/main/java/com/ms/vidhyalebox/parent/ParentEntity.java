@@ -1,9 +1,16 @@
 package com.ms.vidhyalebox.parent;
 
-import com.ms.shared.util.util.domain.GenericEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.user.UserEntity;
-import jakarta.persistence.*;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

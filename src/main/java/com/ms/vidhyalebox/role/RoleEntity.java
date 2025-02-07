@@ -1,7 +1,10 @@
 package com.ms.vidhyalebox.role;
 
-import com.ms.shared.util.util.domain.GenericEntity;
-import jakarta.persistence.*;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

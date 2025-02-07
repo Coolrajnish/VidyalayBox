@@ -1,10 +1,11 @@
 package com.ms.vidhyalebox.shift;
 
-import com.ms.shared.util.util.bl.GenericService;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+
+import com.ms.vidhyalebox.util.bl.GenericService;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 @Service
 public class ShiftServiceImpl extends GenericService<GenericEntity, Long> implements ShiftService{

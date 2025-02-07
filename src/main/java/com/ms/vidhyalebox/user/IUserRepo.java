@@ -1,13 +1,13 @@
 package com.ms.vidhyalebox.user;
 
 
-import com.ms.shared.util.util.repo.GenericRepo;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.ms.vidhyalebox.util.repo.GenericRepo;
 
 
 @Repository

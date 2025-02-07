@@ -1,100 +1,154 @@
-//package com.ms.vidhyalebox.staff;
-//
-//import com.ms.shared.api.auth.StaffSignupRequestDTO;
-//import com.ms.shared.api.auth.TeacherSignupRequestDTO;
-//import com.ms.shared.api.generic.GenericDTO;
-//import com.ms.shared.util.util.bl.GenericService;
-//import com.ms.shared.util.util.bl.IMapperNormal;
-//import com.ms.shared.util.util.domain.GenericEntity;
-//import com.ms.vidhyalebox.auth.JwtTokenProvider;
-//import com.ms.vidhyalebox.role.RoleEntity;
-//import com.ms.vidhyalebox.role.RoleRepo;
-//import com.ms.vidhyalebox.teacher.TeacherEntity;
-//import com.ms.vidhyalebox.user.IUserRepo;
-//import com.ms.vidhyalebox.user.IUserService;
-//import com.ms.vidhyalebox.user.UserEntity;
-//import com.ms.vidhyalebox.user.UserMapperNormal;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.stereotype.Service;
-//
-//@Service
-//public class StaffServiceImpl extends GenericService<GenericEntity, Long> implements IStaffService {
-//
-//	private final IStaffRepo _iStaffRepo;
-//	private final AuthenticationManager authenticationManager;
-//	private final JwtTokenProvider jwtTokenProvider;
-//	private final PasswordEncoder passwordEncoder;
-//
-//	private final StaffMapperNormal _staffMapperNormal;
-//
-//	private final RoleRepo roleRepo;
-//
-//    public StaffServiceImpl(IStaffRepo iStaffRepo, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, UserMapperNormal userMapperNormal, StaffMapperNormal staffMapperNormal, RoleRepo roleRepo) {
-//        _iStaffRepo = iStaffRepo;
-//        this.authenticationManager = authenticationManager;
-//        this.jwtTokenProvider = jwtTokenProvider;
-//        this.passwordEncoder = passwordEncoder;
-//        _staffMapperNormal = staffMapperNormal;
-//		this.roleRepo = roleRepo;
-//    }
-//	public GenericDTO signup(StaffSignupRequestDTO staffSignupRequestDTO) {
-//		// Encode the password
-//		staffSignupRequestDTO.setPassword(passwordEncoder.encode(staffSignupRequestDTO.getPassword()));
-//		// Fetch the RoleEntity by role name (e.g., "ROLE_SCHOOL_ADMIN")
-//		RoleEntity role = roleRepo.findByName(staffSignupRequestDTO.getRole())
-//				.orElseThrow(() -> new IllegalArgumentException("Invalid role specified"));
-//
-//		StaffEntity staffEntity = (StaffEntity) _staffMapperNormal.dtoToEntity(staffSignupRequestDTO);
-//
-//		// Set the role in the OrgClientEntity
-//		staffEntity.setRoleEntity(role);
-//
-//		// Save the OrgClientEntity with the assigned role
-//		StaffEntity saveEntity = _iStaffRepo.save(staffEntity);
-//		GenericDTO genericDTO = _staffMapperNormal.entityToDto(saveEntity);
-//		return genericDTO;
-//	}
-////    public UserEntity signup(UserEntity userEntity) {
-////		userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-////		return _iStaffRepo.save(userEntity);
-////	}
-//
-//	public String login(String phoneNumber, String password) {
-//		Authentication authentication = authenticationManager.authenticate(
-//				new UsernamePasswordAuthenticationToken(phoneNumber, password)
-//		);
-//		return jwtTokenProvider.generateToken(phoneNumber);
-//	}
-//
-//
-//	public boolean isEmailAlreadyExist(final String email) {
-//		return _iStaffRepo.existsByEmail(email);
-//	}
-//
-//	public boolean isMobileNumberExist(final String MobileNumber) {
-//		return _iStaffRepo.existsByMobileNumber(MobileNumber);
-//	}
-//	public void logout() {
-//		// Handle logout if needed (e.g., invalidate tokens on client-side).
-//	}
-//
-//	public UserDetails loadUserByUsername(String username) {
-//
-//        return null;
-//    }
-//
-//	@Override
-//	public JpaRepository getRepo() {
-//		return _iStaffRepo;
-//	}
-//
-//	@Override
-//	public IMapperNormal getMapper() {
-//		return _staffMapperNormal;
-//	}
-//}
+package com.ms.vidhyalebox.staff;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsRepo;
+import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
+import com.ms.vidhyalebox.orgclient.OrgClientEntity;
+import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
+import com.ms.vidhyalebox.payrollSettings.PayrollRepo;
+import com.ms.vidhyalebox.salary.SalaryEntity;
+import com.ms.vidhyalebox.salary.SalaryRepo;
+import com.ms.vidhyalebox.user.IUserRepo;
+import com.ms.vidhyalebox.user.IUserService;
+import com.ms.vidhyalebox.user.UserEntity;
+import com.ms.vidhyalebox.util.bl.GenericService;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.InvalidItemException;
+
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
+public class StaffServiceImpl extends GenericService<GenericEntity, Long> implements IStaffService {
+
+	private final IStaffRepo _iStaffRepo;
+	private final LeaveSettingsRepo leave;
+	private IOrgClientRepo orgClientRepo;
+	private IUserRepo userRepo;
+	private IUserService userService;
+	private final PasswordEncoder passwordEncoder;
+	private final PayrollRepo payrollRepo;
+	private final SalaryRepo salaryrepo;
+	//private SessionRepo sessionRepo;
+	//private final StaffMapperNormal _staffMapperNormal;
+	//private final RoleRepo roleRepo;
+
+	@Autowired
+	public StaffServiceImpl(IStaffRepo iStaffRepo, PasswordEncoder passwordEncoder,
+			 IUserService userService, IOrgClientRepo orgClientRepo,
+			 LeaveSettingsRepo leave, IUserRepo userRepo, PayrollRepo payrollRepo, SalaryRepo salaryrepo) {
+		this._iStaffRepo = iStaffRepo;
+		this.passwordEncoder = passwordEncoder;
+		this.leave = leave;
+		this.orgClientRepo = orgClientRepo;
+		this.userRepo = userRepo;
+		this.userService = userService;
+		//this._staffMapperNormal = staffMapperNormal;
+		//this.roleRepo = roleRepo;
+		this.payrollRepo = payrollRepo;
+		this.salaryrepo = salaryrepo;
+	}
+
+	@Transactional
+	@Override
+	public String addStaff(StaffDTO staffDTO, MultipartFile image) {
+		try {
+			if (userRepo.existsByIdentityProvider(staffDTO.getIdentity())) {
+				throw new InvalidItemException("Please contact support, staff identity already exists.");
+			}
+			// Retaining casting for ParentEntity
+			var salary = new SalaryEntity();
+			salary.setBasicSalary(new BigDecimal(staffDTO.getSalary()));
+			salary.setPaymentDate(LocalDate.now().plusDays(30).toString());
+			salary.setPaymentStatus("PENDING");
+			salary.setSchool(orgClientRepo.findByOrgUniqId(staffDTO.getSchool()).get());
+			List<PayrollEntity> payrolls = new ArrayList<PayrollEntity>(); 
+			for(Long id : staffDTO.getPayroll()) {
+				payrolls.add(payrollRepo.findById(id).get());
+			}
+			salary.setPayrolls(payrolls);
+			long total = Long.valueOf(staffDTO.getSalary());
+			for (PayrollEntity pay : payrolls) {
+				long amount = 0;
+				if (!pay.getAmount().isEmpty()) {
+					amount = Long.parseLong(pay.getAmount());
+				} else {
+					amount = (Long.parseLong(pay.getPercentage()) * Long.parseLong(staffDTO.getSalary())) / 100;
+				}
+
+				// Conditionally add or subtract based on payroll type
+				if ("ALLOWANCE".equals(pay.getPayrollType())) {
+					total += amount;
+				} else {
+					total -= amount;
+				}
+			}
+
+			salary.setNetSalary(BigDecimal.valueOf(total));
+			var user = new UserEntity();
+			user.setEmail(staffDTO.getEmail());
+
+			user.setFirstName(staffDTO.getFirstName());
+			user.setLastName(staffDTO.getLastName());
+
+			user.setMobileNumber(staffDTO.getPhoneNo());
+			user.setPassword(passwordEncoder.encode(staffDTO.getPhoneNo()));
+			user.setSchool(orgClientRepo.findByOrgUniqId(staffDTO.getSchool())
+					.orElseThrow(() -> new EntityNotFoundException("School not found")));
+			user.setRole("ROLE_STAFF");
+			user.setIdentityProvider(staffDTO.getIdentity());
+			user.setImage(userService.saveImage(image, staffDTO.getSchool() + "_staff"));
+			var userEntity = userRepo.save(user);
+			salary.setUser(userEntity);
+			// Retaining casting for StudentEntity
+			var entity = new StaffEntity();
+			entity.setUser(userEntity);
+			OrgClientEntity school = orgClientRepo.findByOrgUniqId(staffDTO.getSchool()).get();
+			entity.setSchool(school);
+			List<LeaveSettingsEntity> leavesettings = leave.getLeaveSettings( ""+school.getId()).get();
+			LeaveSettingsEntity leaveisactive = null;
+			for(LeaveSettingsEntity leaveval : leavesettings) {
+				if(leaveval.getSession().isActive()) {
+					leaveisactive = leaveval;
+				}
+			}
+			salary =  salaryrepo.save(salary);
+			entity.setLeavesettings(leaveisactive);
+			entity.setSalary(salary);
+			_iStaffRepo.save(entity);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "Student added";
+	}
+
+	@Override
+	public JpaRepository<GenericEntity, Object> getRepo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IMapperNormal getMapper() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

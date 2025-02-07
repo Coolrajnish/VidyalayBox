@@ -1,13 +1,18 @@
 package com.ms.vidhyalebox.student;
 
-import com.ms.shared.util.util.domain.GenericEntity;
 import com.ms.vidhyalebox.Class.ClassEntity;
-import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.parent.ParentEntity;
 import com.ms.vidhyalebox.session.SessionEntity;
 import com.ms.vidhyalebox.user.UserEntity;
-import jakarta.persistence.*;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -39,6 +44,8 @@ public class StudentEntity extends GenericEntity {
     @JoinColumn(name = "parentId", nullable = false)
     private ParentEntity parentEntity;
 
+    
+    //redundant data should be removed
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 

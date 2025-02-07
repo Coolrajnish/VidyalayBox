@@ -1,22 +1,21 @@
 package com.ms.vidhyalebox.classsubject;
 
-import com.ms.shared.api.auth.classsubjectDTO.ClassSubjectDTO;
-import com.ms.shared.api.auth.classsubjectDTO.ElectSubDTO;
-import com.ms.shared.api.auth.studentDTO.StudentTransferDTO;
-import com.ms.shared.api.generic.GenericResponse;
-import com.ms.shared.api.generic.Notification;
-import com.ms.shared.util.util.bl.IGenericService;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.shared.util.util.rest.GenericController;
-import com.ms.vidhyalebox.subject.SubjectEntity;
-import com.ms.vidhyalebox.subject.SubjectRepo;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ms.vidhyalebox.sharedapi.classsubjectDTO.ClassSubjectDTO;
+import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
+import com.ms.vidhyalebox.subject.SubjectRepo;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.GenericController;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -42,9 +41,8 @@ public class ClassSubjectController extends GenericController<ClassSubjectDTO, L
 
 
     @PostMapping("/mapclasssub")
-    public GenericResponse registerOrg(@Valid @RequestBody ClassSubjectDTO classSubjectDTO) {
+    public ResponseEntity<APiResponse<Object>> registerOrg(@Valid @RequestBody ClassSubjectDTO classSubjectDTO) {
 
-        GenericResponse genericResponse =   _classSubjectService.MapClassSubject(classSubjectDTO);
-        return genericResponse;
+        return _classSubjectService.MapClassSubject(classSubjectDTO);
     }
 }

@@ -1,0 +1,28 @@
+package com.ms.vidhyalebox.util.domain;
+
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+
+public class ISTTimestampListener {
+
+	@PrePersist
+	public void prePersist(GenericEntity entity) {
+		ZoneId istZoneId = ZoneId.of("Asia/Kolkata");
+		ZoneOffset istOffset = OffsetDateTime.now(istZoneId).getOffset();
+
+		entity.setCreatedAt(OffsetDateTime.now(istOffset));
+		entity.setUpdatedAt(OffsetDateTime.now(istOffset));
+	}
+
+	@PreUpdate
+	public void preUpdate(GenericEntity entity) {
+		ZoneId istZoneId = ZoneId.of("Asia/Kolkata");
+		ZoneOffset istOffset = OffsetDateTime.now(istZoneId).getOffset();
+
+		entity.setUpdatedAt(OffsetDateTime.now(istOffset));
+	}
+}

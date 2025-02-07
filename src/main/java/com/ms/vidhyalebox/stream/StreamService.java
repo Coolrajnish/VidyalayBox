@@ -1,7 +1,7 @@
 package com.ms.vidhyalebox.stream;
 
-import com.ms.shared.util.util.bl.IGenericService;
-import com.ms.shared.util.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 public interface StreamService extends IGenericService<GenericEntity, Long> {
 }

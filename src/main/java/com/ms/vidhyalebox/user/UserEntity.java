@@ -1,17 +1,20 @@
 package com.ms.vidhyalebox.user;
 
-import com.ms.shared.util.util.domain.GenericEntity;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
-import com.ms.vidhyalebox.role.RoleEntity;
-import jakarta.persistence.*;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @ToString(callSuper = true)

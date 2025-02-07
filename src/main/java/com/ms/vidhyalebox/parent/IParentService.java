@@ -1,10 +1,8 @@
 package com.ms.vidhyalebox.parent;
 
 
-import com.ms.shared.api.auth.ParentSignupRequestDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.util.util.bl.IGenericService;
-import com.ms.shared.util.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 public interface IParentService extends IGenericService<GenericEntity, Long> {
 

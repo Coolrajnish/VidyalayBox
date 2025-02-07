@@ -1,23 +1,27 @@
 package com.ms.vidhyalebox.classsubject;
 
-import com.ms.shared.api.auth.classsubjectDTO.ClassSubjectDTO;
-import com.ms.shared.api.generic.GenericResponse;
-import com.ms.shared.api.generic.Notification;
-import com.ms.shared.util.util.bl.GenericService;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.vidhyalebox.addadmin.SchAdminEntity;
-import com.ms.vidhyalebox.addadmin.SchAdminRepo;
-import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
-import com.ms.vidhyalebox.subject.SubjectEntity;
-import com.ms.vidhyalebox.subject.SubjectRepo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
+import com.ms.vidhyalebox.sharedapi.classsubjectDTO.ClassSubjectDTO;
+import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
+import com.ms.vidhyalebox.sharedapi.generic.Notification;
+import com.ms.vidhyalebox.subject.SubjectEntity;
+import com.ms.vidhyalebox.subject.SubjectRepo;
+import com.ms.vidhyalebox.util.bl.GenericService;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.ItemNotFoundException;
+import com.ms.vidhyalebox.util.rest.UnknownErrorException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ClassSubjectServiceImpl extends GenericService<GenericEntity, Long> implements ClassSubjectService {
@@ -46,55 +50,51 @@ public class ClassSubjectServiceImpl extends GenericService<GenericEntity, Long>
 
     @Transactional
     @Override
-    public GenericResponse MapClassSubject(ClassSubjectDTO classSubjectDTO) {
+    public ResponseEntity<APiResponse<Object>> MapClassSubject(ClassSubjectDTO classSubjectDTO) {
         List<Notification> notifications = new ArrayList<>();
         try {
-            for (Long coreId : classSubjectDTO.getCoreSubject()) {
-                ClassSubjectEntity entity = new ClassSubjectEntity();
-                SubjectEntity subjectEntity = sbjectRepo.findById(coreId).get();
+            classSubjectDTO.getCoreSubject().forEach(coreId -> {
+                var subjectEntity = sbjectRepo.findById(coreId)
+                                              .orElseThrow(() -> new ItemNotFoundException("Subject not found for id: " + coreId));
+                
+                var school = schAdminRepo.findByOrgUniqId(classSubjectDTO.getOrgUniqId())
+                                         .orElseThrow(() -> new ItemNotFoundException("School not found for OrgUniqId: " + classSubjectDTO.getOrgUniqId()));
 
+                var entity = new ClassSubjectEntity();
                 entity.setSubjectEntity(subjectEntity);
-                entity.setSchool(schAdminRepo.findByOrgUniqId(classSubjectDTO.getOrgUniqId()).get());
+                entity.setSchool(school);
                 entity.setGroupName(0);
                 entity.setSubjectType("CORE");
                 entity.setClassname(classSubjectDTO.getClassName());
+                
                 subjectRepo.save(entity);
-            }
-            int i = 1;
-            for (Long electId : classSubjectDTO.getElectSubject().getElectSubject()) {
-                ClassSubjectEntity entity = new ClassSubjectEntity();
-                SubjectEntity subjectEntity = sbjectRepo.findById(electId).get();
+            });
+            var totalElectCount = classSubjectDTO.getElectSubject().getTotalElectCount();
+            AtomicInteger atomicCounter = new AtomicInteger(0); // Atomic integer to keep track of the group number
+
+            classSubjectDTO.getElectSubject().getElectSubject().forEach(electId -> {
+                var subjectEntity = sbjectRepo.findById(electId)
+                                              .orElseThrow(() -> new EntityNotFoundException("Subject not found for id: " + electId));
+
+                var entity = new ClassSubjectEntity();
                 entity.setSubjectEntity(subjectEntity);
-                entity.setGroupName(i++);
+                entity.setGroupName(atomicCounter.getAndIncrement()); // Increment and get the value
                 entity.setSubjectType("ELECT");
                 entity.setClassname(classSubjectDTO.getClassName());
-                entity.setTotalElectCount(classSubjectDTO.getElectSubject().getTotalElectCount());
+                entity.setTotalElectCount(totalElectCount);
+
                 subjectRepo.save(entity);
-            }
+            });
         } catch (Exception e) {
-            Notification notification = new Notification();
-            notification.setNoificationCode("401");
-            notification.setNotificationDescription("Failed to transfer/promote student");
-            notifications.add(notification);
 
-         //   throw new RuntimeException(e);
+            throw new UnknownErrorException("Failed to map class with subject - "+e.getMessage());
         }
 
-        if (!notifications.isEmpty()) {
-            GenericResponse genericResponse = new GenericResponse();
-            genericResponse.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-            genericResponse.setNotifications(notifications);
-
-            return genericResponse;
-        }
-
-        GenericResponse genericResponse = new GenericResponse();
-        genericResponse.setCode(HttpStatus.OK.getReasonPhrase());
-        Notification notification = new Notification();
-        notification.setNoificationCode("200");
-        notification.setNotificationDescription("Class and subject mapped successfully");
-        notifications.add(notification);
-
-        return genericResponse;
+        return ResponseEntity.ok(new APiResponse<>(
+                "success",
+                "Class and subject mapped successfully",
+                null,
+                null
+        ));
     }
 }

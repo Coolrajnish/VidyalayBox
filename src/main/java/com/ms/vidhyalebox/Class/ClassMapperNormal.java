@@ -1,16 +1,17 @@
 package com.ms.vidhyalebox.Class;
 
-import com.ms.shared.api.auth.ClassDTO.ClassDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.ms.vidhyalebox.medium.MediumRepo;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.section.SectionRepo;
+import com.ms.vidhyalebox.sharedapi.ClassDTO.ClassDTO;
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
 import com.ms.vidhyalebox.shift.ShiftRepo;
 import com.ms.vidhyalebox.stream.StreamRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 @Service
 public class ClassMapperNormal implements IMapperNormal {

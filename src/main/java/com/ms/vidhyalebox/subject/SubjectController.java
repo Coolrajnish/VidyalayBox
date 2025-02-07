@@ -1,19 +1,14 @@
 package com.ms.vidhyalebox.subject;
 
-import com.ms.shared.api.auth.studentDTO.StudentTransferDTO;
-import com.ms.shared.api.auth.subject.SubjectDTO;
-import com.ms.shared.api.generic.GenericResponse;
-import com.ms.shared.api.generic.Notification;
-import com.ms.shared.util.util.bl.IGenericService;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.shared.util.util.rest.GenericController;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import com.ms.vidhyalebox.sharedapi.subject.SubjectDTO;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.GenericController;
 
 @CrossOrigin(origins = "*")
 @RestController

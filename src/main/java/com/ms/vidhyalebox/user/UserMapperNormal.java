@@ -1,13 +1,14 @@
 package com.ms.vidhyalebox.user;
 
-import com.ms.shared.api.auth.SignupRequestDTO;
-import com.ms.shared.api.auth.SignupResponseDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.vidhyalebox.utility.VidhyaleBoxUtil;
-import com.ms.shared.util.util.TILServiceUtil;
-import com.ms.shared.util.util.bl.IMapperNormal;
-import com.ms.shared.util.util.domain.GenericEntity;
 import org.springframework.stereotype.Service;
+
+import com.ms.vidhyalebox.sharedapi.SignupRequestDTO;
+import com.ms.vidhyalebox.sharedapi.SignupResponseDTO;
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.util.TILServiceUtil;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.utility.VidhyaleBoxUtil;
 
 @Service
 public class UserMapperNormal implements IMapperNormal {

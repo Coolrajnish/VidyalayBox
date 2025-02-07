@@ -1,12 +1,15 @@
 package com.ms.vidhyalebox.orgclient;
 
-import com.ms.shared.util.util.domain.GenericEntity;
-import jakarta.persistence.*;
+import java.util.UUID;
+
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.util.UUID;
 
 @Data
 @ToString(callSuper = true)

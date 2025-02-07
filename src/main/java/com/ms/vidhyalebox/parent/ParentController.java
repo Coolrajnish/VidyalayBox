@@ -1,21 +1,16 @@
 package com.ms.vidhyalebox.parent;
 
-import com.ms.shared.api.auth.ParentSignupRequestDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.api.generic.GenericResponse;
-import com.ms.shared.api.generic.ModalDTO;
-import com.ms.shared.api.generic.Notification;
-import com.ms.shared.util.util.bl.IGenericService;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.shared.util.util.rest.GenericController;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import com.ms.vidhyalebox.sharedapi.ParentSignupRequestDTO;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.GenericController;
 
 @CrossOrigin(origins = "*")
 @RestController

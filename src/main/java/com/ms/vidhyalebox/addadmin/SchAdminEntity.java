@@ -1,8 +1,9 @@
 package com.ms.vidhyalebox.addadmin;
 
-import com.ms.shared.util.util.domain.GenericEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.user.UserEntity;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

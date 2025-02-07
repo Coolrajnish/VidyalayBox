@@ -1,32 +1,14 @@
 package com.ms.vidhyalebox.orgclient;
 
-import com.ms.shared.api.auth.LoginRequestDTO;
-import com.ms.shared.api.auth.LoginResponseDTO;
-import com.ms.shared.api.auth.OrgSignupRequestDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.api.generic.GenericResponse;
-import com.ms.shared.api.generic.ModalDTO;
-import com.ms.shared.api.generic.Notification;
-import com.ms.shared.util.util.FatalException;
-import com.ms.shared.util.util.bl.IGenericService;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.shared.util.util.rest.GenericController;
-import com.ms.vidhyalebox.auth.JwtTokenProvider;
-import com.ms.vidhyalebox.auth.UserPrincipal;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.ms.vidhyalebox.sharedapi.OrgSignupRequestDTO;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.GenericController;
 
 @RestController
 @RequestMapping("/org")

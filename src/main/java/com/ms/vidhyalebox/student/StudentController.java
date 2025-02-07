@@ -1,33 +1,30 @@
 package com.ms.vidhyalebox.student;
 
-import com.ms.shared.api.auth.OrgSignupRequestDTO;
-import com.ms.shared.api.auth.ParentSignupRequestDTO;
-import com.ms.shared.api.auth.stream.StreamDTO;
-import com.ms.shared.api.auth.studentDTO.StudentDTO;
-import com.ms.shared.api.auth.studentDTO.StudentTransferDTO;
-import com.ms.shared.api.generic.GenericDTO;
-import com.ms.shared.api.generic.GenericResponse;
-import com.ms.shared.api.generic.ModalDTO;
-import com.ms.shared.api.generic.Notification;
-import com.ms.shared.util.util.bl.IGenericService;
-import com.ms.shared.util.util.domain.GenericEntity;
-import com.ms.shared.util.util.rest.GenericController;
-import com.ms.vidhyalebox.emailsender.EmailDetails;
-import com.ms.vidhyalebox.parent.ParentEntity;
-import com.ms.vidhyalebox.stream.StreamserviceImpl;
-import com.ms.vidhyalebox.user.UserEntity;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
+import com.ms.vidhyalebox.sharedapi.studentDTO.StudentDTO;
+import com.ms.vidhyalebox.sharedapi.studentDTO.StudentTransferDTO;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.GenericController;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -42,42 +39,46 @@ public class StudentController extends GenericController<StudentDTO, Long> {
     }
 
     @PostMapping("/transfer")
-    public GenericResponse registerOrg(@Valid @RequestBody List<StudentTransferDTO> studentTransferDTO) {
+    public ResponseEntity<APiResponse<Object>> registerOrg(@Valid @RequestBody List<StudentTransferDTO> studentTransferDTO) {
+        try {
+            boolean update = _studentService.transferStudent(studentTransferDTO);
 
-        List<Notification> notifications = new ArrayList<>();
-        boolean update =  _studentService.transferStudent(studentTransferDTO);
+            if (!update) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                     .body(new APiResponse<>("error", "Failed to transfer/promote student", null, null));
+            }
 
-        if(!update){
-            Notification notification = new Notification();
-            notification.setNoificationCode("401");
-            notification.setNotificationDescription("Failed to transfer/promote student");
-            notifications.add(notification);
+            return ResponseEntity.ok(new APiResponse<>("success", "Student transferred/promoted successfully", null, null));
+        } catch (Exception e) {
+            // logger.error("Error occurred while transferring students", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(new APiResponse<>("error", "Internal server error: " + e.getMessage(), null, null));
         }
-
-        if (!notifications.isEmpty()) {
-            GenericResponse genericResponse = new GenericResponse();
-            genericResponse.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-            genericResponse.setNotifications(notifications);
-
-            return genericResponse;
-        }
-
-        GenericResponse genericResponse = new GenericResponse();
-        genericResponse.setCode(HttpStatus.OK.getReasonPhrase());
-        Notification notification = new Notification();
-        notification.setNoificationCode("200");
-        notification.setNotificationDescription("Student transfered/promoted successfully");
-        notifications.add(notification);
-
-        return genericResponse;
     }
 
     @PostMapping(path = "/addstudent", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public String addStudent(@RequestPart("studentDTO") StudentDTO studentDTO, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<APiResponse<Object>> addStudent(@RequestPart("studentDTO") StudentDTO studentDTO, @RequestParam("image") MultipartFile image) {
 
-        String bool =  _studentService.addStudent(studentDTO, image);
+        try {
+			_studentService.addStudent(studentDTO, image);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APiResponse<>(
+	                "error",
+	                "Student registered failed - "+e.getLocalizedMessage(),
+	                Map.of("stufName" , studentDTO.getFirstName(),
+	                        "stulName" , studentDTO.getLastName()),
+	                null
+	        ));
+		}
 
-        return bool;
+        return ResponseEntity.ok(new APiResponse<>(
+                "success",
+                "Student registered successfully",
+                Map.of("stufName" , studentDTO.getFirstName(),
+                        "stulName" , studentDTO.getLastName()),
+                null
+        ));
     }
 
     @Override
