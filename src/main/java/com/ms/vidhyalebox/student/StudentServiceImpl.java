@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -128,6 +132,25 @@ public class StudentServiceImpl extends GenericService<GenericEntity, Long> impl
 		studentRepo.save(entity);
 
 		return "Student added";
+	}
+
+	@Transactional
+	@Override
+	public Page<StudentEntity> search(String orgId, String searchText, int page, int size, String sortBy,
+			String sortOrder) {
+		// TODO Auto-generated method stub
+		Pageable pageable = null;
+		if(sortBy.isEmpty()) {
+			pageable = PageRequest.of(page, size);
+		} else {
+             pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc") ?
+                    Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        }
+		   if(!orgId.isEmpty() ){
+	            return studentRepo.search(orgId, searchText, pageable);
+	        } else {
+	            return studentRepo.findAll(pageable);
+	        }
 	}
 
 }

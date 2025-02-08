@@ -3,6 +3,8 @@ package com.ms.vidhyalebox.staff;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -38,5 +40,8 @@ public interface IStaffRepo extends GenericRepo<StaffEntity, Long> {
 //			+ "OR email_address = :email", nativeQuery = true)
 //	Optional<UserEntity> findByPhoneNumberOrEmailAddress(@Param("phoneNumber") String phoneNumber,
 //			@Param("email") String email);
-
+	
+  public Page<StaffEntity> search(@Param("orgId") String orgId,
+          @Param("searchText") String searchText,
+          Pageable pageable);
 }

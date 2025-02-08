@@ -5,12 +5,14 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
 import com.ms.vidhyalebox.sharedapi.studentDTO.StudentDTO;
 import com.ms.vidhyalebox.sharedapi.studentDTO.StudentTransferDTO;
@@ -84,5 +87,27 @@ public class StudentController extends GenericController<StudentDTO, Long> {
     @Override
     public IGenericService<GenericEntity, Long> getService() {
         return _studentService;
+    }
+    @GetMapping("/pagination")
+    public ResponseEntity<APiResponse<List<StudentEntity>>> filterStudent(
+            @RequestParam String orgId,
+            @RequestParam(defaultValue = "") String searchText,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "student_name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder
+    ){
+
+        Page<StudentEntity> val  =  _studentService.search(orgId, searchText, page, size, sortBy, sortOrder);
+        return ResponseEntity.ok(
+                new APiResponse<>(
+                        "success" ,
+                        "Data fetched successfully" ,
+                        _studentService.search(orgId, searchText, page, size, sortBy, sortOrder).getContent(),
+                        Map.of(
+                                "currentPage", val.getNumber(),
+                                "totalPages", val.getTotalPages(),
+                                "totalItems", val.getTotalElements()
+                        )));
     }
 }
