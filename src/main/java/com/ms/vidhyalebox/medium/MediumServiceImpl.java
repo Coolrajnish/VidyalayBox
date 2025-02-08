@@ -16,7 +16,7 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 public class MediumServiceImpl extends GenericService<GenericEntity, Long> implements  MediumService{
 
     private final MediumMapper mediumMapper;
-
+    
     private final MediumRepo mediumRepo;
 
     public MediumServiceImpl(MediumMapper mediumMapper, MediumRepo mediumRepo) {
@@ -36,6 +36,7 @@ public class MediumServiceImpl extends GenericService<GenericEntity, Long> imple
     }
 
     @Transactional
+    @Override
     public Page<MediumEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder) {
         Pageable pageable = null;
         if(sortBy.isEmpty()){

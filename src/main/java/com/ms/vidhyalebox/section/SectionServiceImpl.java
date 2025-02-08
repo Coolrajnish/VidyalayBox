@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ms.vidhyalebox.util.bl.GenericService;
 import com.ms.vidhyalebox.util.bl.IMapperNormal;
@@ -32,6 +33,8 @@ public class SectionServiceImpl extends GenericService<GenericEntity, Long> impl
         return sectionMapperNormal;
     }
 
+    @Transactional
+    @Override
     public Page<SectionEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder) {
         Pageable pageable = null;
         if(sortBy.isEmpty()){

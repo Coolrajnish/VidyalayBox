@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsRepo;
+import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
@@ -150,5 +155,22 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+    @Transactional
+    @Override
+    public Page<StaffEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder) {
+        Pageable pageable = null;
+        if(sortBy.isEmpty()){
+             pageable = PageRequest.of(page, size);
+        } else {
+             pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc") ?
+                    Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        }
+        if(!orgId.isEmpty() ){
+            return _iStaffRepo.search(orgId, searchText, pageable);
+        } else {
+            return _iStaffRepo.findAll(pageable);
+        }
+    }
 
 }

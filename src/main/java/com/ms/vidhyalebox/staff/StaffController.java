@@ -1,12 +1,15 @@
 package com.ms.vidhyalebox.staff;
 
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
@@ -55,6 +59,29 @@ public class StaffController extends GenericController<StaffDTO, Long> {
 		return ResponseEntity.ok(new APiResponse<>("success", "Staff registered successfully",
 				Map.of("staff FirstName", staffDto.getFirstName(), "staff LastName", staffDto.getLastName()), null));
 	}
+	
+	   @GetMapping("/pagination")
+	    public ResponseEntity<APiResponse<List<StaffEntity>>> filterStaff(
+	            @RequestParam String orgId,
+	            @RequestParam(defaultValue = "") String searchText,
+	            @RequestParam(defaultValue = "0") int page,
+	            @RequestParam(defaultValue = "10") int size,
+	            @RequestParam(defaultValue = "staff_name") String sortBy,
+	            @RequestParam(defaultValue = "asc") String sortOrder
+	    ) {
+
+	        Page<StaffEntity> val  =   _iStaffService.search(orgId, searchText, page, size, sortBy, sortOrder);
+	        return ResponseEntity.ok(
+	                new APiResponse<>(
+	                        "success" ,
+	                        "Data fetched successfully" ,
+	                        _iStaffService.search(orgId, searchText, page, size, sortBy, sortOrder).getContent(),
+	                        Map.of(
+	                                "currentPage", val.getNumber(),
+	                                "totalPages", val.getTotalPages(),
+	                                "totalItems", val.getTotalElements()
+	                        )));
+	    }
 
 	/*
 	 * @PostMapping("/logout") public ResponseEntity<Void> logout() {
