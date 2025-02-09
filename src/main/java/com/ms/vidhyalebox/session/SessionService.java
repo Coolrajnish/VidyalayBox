@@ -2,7 +2,6 @@ package com.ms.vidhyalebox.session;
 
 import org.springframework.data.domain.Page;
 
-import com.ms.vidhyalebox.section.SectionEntity;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 

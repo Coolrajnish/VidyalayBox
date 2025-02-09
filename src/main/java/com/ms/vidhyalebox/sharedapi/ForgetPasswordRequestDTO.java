@@ -1,11 +1,11 @@
 package com.ms.vidhyalebox.sharedapi;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 
 @Accessors(prefix = "_")
 @Data

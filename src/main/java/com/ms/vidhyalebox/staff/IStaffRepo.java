@@ -1,15 +1,11 @@
 package com.ms.vidhyalebox.staff;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.ms.vidhyalebox.user.UserEntity;
 import com.ms.vidhyalebox.util.repo.GenericRepo;
 
 @Repository
@@ -41,6 +37,7 @@ public interface IStaffRepo extends GenericRepo<StaffEntity, Long> {
 //	Optional<UserEntity> findByPhoneNumberOrEmailAddress(@Param("phoneNumber") String phoneNumber,
 //			@Param("email") String email);
 	
+  @Query(value = "SELECT * FROM staff p JOIN users u on u.id = p.user_id WHERE u.org_uniq_id =:orgId  AND LOWER(u.first_name) LIKE LOWER(CONCAT(:searchText, '%') OR LOWER(u.last_name) LIKE LOWER(CONCAT( :searchText, '%') OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchText, '%')) OR LOWER(u.mobile_number) LIKE LOWER(CONCAT( :searchText, '%'))", nativeQuery = true)
   public Page<StaffEntity> search(@Param("orgId") String orgId,
           @Param("searchText") String searchText,
           Pageable pageable);

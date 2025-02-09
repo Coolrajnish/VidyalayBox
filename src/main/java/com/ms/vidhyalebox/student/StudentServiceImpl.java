@@ -21,8 +21,6 @@ import com.ms.vidhyalebox.parent.ParentEntity;
 import com.ms.vidhyalebox.parent.ParentMapperNormal;
 import com.ms.vidhyalebox.session.SessionRepo;
 import com.ms.vidhyalebox.sharedapi.ParentSignupRequestDTO;
-import com.ms.vidhyalebox.sharedapi.studentDTO.StudentDTO;
-import com.ms.vidhyalebox.sharedapi.studentDTO.StudentTransferDTO;
 import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.IUserService;
 import com.ms.vidhyalebox.user.UserEntity;
@@ -140,17 +138,17 @@ public class StudentServiceImpl extends GenericService<GenericEntity, Long> impl
 			String sortOrder) {
 		// TODO Auto-generated method stub
 		Pageable pageable = null;
-		if(sortBy.isEmpty()) {
+		if (sortBy.isEmpty()) {
 			pageable = PageRequest.of(page, size);
 		} else {
-             pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc") ?
-                    Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
-        }
-		   if(!orgId.isEmpty() ){
-	            return studentRepo.search(orgId, searchText, pageable);
-	        } else {
-	            return studentRepo.findAll(pageable);
-	        }
+			pageable = PageRequest.of(page, size,
+					sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+		}
+		if (!orgId.isEmpty()) {
+			return studentRepo.search(orgId, searchText, pageable);
+		} else {
+			return studentRepo.findAll(pageable);
+		}
 	}
 
 }

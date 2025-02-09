@@ -60,5 +60,8 @@ public class StudentEntity extends GenericEntity {
 
     @Column(name = "permanentAddress")
     private String permanentAddress;
+    
+    @Column(name = "admissionNumber")
+    private String admissionNumber;
 
 }

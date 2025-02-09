@@ -2,7 +2,6 @@ package com.ms.vidhyalebox.Class;
 
 import org.springframework.data.domain.Page;
 
-import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 

@@ -5,18 +5,9 @@ import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
-import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
-import com.ms.vidhyalebox.user.UserEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

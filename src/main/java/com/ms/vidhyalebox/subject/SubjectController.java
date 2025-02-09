@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
-import com.ms.vidhyalebox.sharedapi.subject.SubjectDTO;
-import com.ms.vidhyalebox.stream.StreamEntity;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;

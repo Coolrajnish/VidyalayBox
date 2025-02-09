@@ -4,7 +4,6 @@ import javax.validation.constraints.NotEmpty;
 
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

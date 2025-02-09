@@ -3,13 +3,8 @@ package com.ms.vidhyalebox.leave;
 
 import javax.validation.constraints.NotEmpty;
 
-import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
-import com.ms.vidhyalebox.user.UserEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

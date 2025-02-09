@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
-import com.ms.vidhyalebox.sharedapi.subject.SubjectDTO;
 import com.ms.vidhyalebox.util.bl.IMapperNormal;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 

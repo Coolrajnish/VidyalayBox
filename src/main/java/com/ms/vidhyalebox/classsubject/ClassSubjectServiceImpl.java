@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
-import com.ms.vidhyalebox.sharedapi.classsubjectDTO.ClassSubjectDTO;
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
 import com.ms.vidhyalebox.sharedapi.generic.Notification;
-import com.ms.vidhyalebox.subject.SubjectEntity;
 import com.ms.vidhyalebox.subject.SubjectRepo;
 import com.ms.vidhyalebox.util.bl.GenericService;
 import com.ms.vidhyalebox.util.bl.IMapperNormal;

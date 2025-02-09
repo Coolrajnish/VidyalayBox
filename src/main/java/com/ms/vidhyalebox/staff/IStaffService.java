@@ -3,7 +3,6 @@ package com.ms.vidhyalebox.staff;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 

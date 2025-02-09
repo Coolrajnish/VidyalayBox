@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
-import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
 
 import lombok.Data;
