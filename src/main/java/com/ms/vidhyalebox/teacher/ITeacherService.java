@@ -1,4 +1,4 @@
-//package com.ms.vidhyalebox.teacher;
+package com.ms.vidhyalebox.teacher;
 //
 //
 //import com.ms.shared.api.auth.StaffSignupRequestDTO;
@@ -7,7 +7,17 @@
 //import com.ms.shared.util.util.bl.IGenericService;
 //import com.ms.shared.util.util.domain.GenericEntity;
 //
-//public interface ITeacherService extends IGenericService<GenericEntity, Long> {
+
+import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+
+public interface ITeacherService extends IGenericService<GenericEntity, Long> {
+	
+	 public String addTeacher(TeacherDTO teacherDTO, MultipartFile image);
+	 public Page<TeacherEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder);
+}
 //    boolean isEmailAlreadyExist(final String emailAddress);
 //    public GenericDTO signup(TeacherSignupRequestDTO teacherSignupRequestDTO);
 //    public boolean isMobileNumberExist(final String MobileNumber);

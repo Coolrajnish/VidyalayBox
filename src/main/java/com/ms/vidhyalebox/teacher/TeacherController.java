@@ -1,30 +1,81 @@
-//package com.ms.vidhyalebox.teacher;
+package com.ms.vidhyalebox.teacher;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
+import com.ms.vidhyalebox.util.bl.IGenericService;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import com.ms.vidhyalebox.util.rest.GenericController;
+
+
+@CrossOrigin(origins = "*")
+@RestController
+@Validated
+@RequestMapping("/teacher")
+public class TeacherController extends GenericController<TeacherDTO, Long> {
 //
-//import com.ms.shared.api.auth.SignupRequestDTO;
-//import com.ms.shared.api.auth.TeacherSignupRequestDTO;
-//import com.ms.shared.api.generic.GenericDTO;
-//import com.ms.shared.api.generic.GenericResponse;
-//import com.ms.shared.api.generic.ModalDTO;
-//import com.ms.shared.api.generic.Notification;
-//import com.ms.shared.util.util.bl.IGenericService;
-//import com.ms.shared.util.util.domain.GenericEntity;
-//import com.ms.shared.util.util.rest.GenericController;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.validation.annotation.Validated;
-//import org.springframework.web.bind.annotation.*;
-//
-//import javax.validation.Valid;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@CrossOrigin(origins = "*")
-//@RestController
-//@Validated
-//@RequestMapping("/teacher")
-//public class TeacherController extends GenericController<SignupRequestDTO, Long> {
-//
-//	private final TeacherServiceImpl  _teacherService;
+	private final TeacherServiceImpl _iTeacherService;
+	
+	public TeacherController(final TeacherServiceImpl teacherservice) {
+		 _iTeacherService = teacherservice;
+	}
+
+	@Override
+	public IGenericService<GenericEntity, Long> getService() {
+		_iTeacherService.setAuthToken(getAuthToken());
+		return _iTeacherService;
+	}
+	
+	@PostMapping(path = "/addteacher", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+	public ResponseEntity<APiResponse<Object>> addTeacher(@RequestPart("teacherDTO") TeacherDTO teacherDTO,
+			                       @RequestParam("image") MultipartFile image){
+
+		try {
+			_iTeacherService.addTeacher(teacherDTO, image);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO Auto-generated catch block
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new APiResponse<>("error", "Teacher regestration failed - " + e.getLocalizedMessage(), Map
+							.of("teacher FirstName", teacherDTO.getFirstName(), "teacher LastName", teacherDTO.getLastName()),
+							null));
+		}
+		
+		return ResponseEntity.ok(new APiResponse<>("success", "Teacher registered successfully",
+				Map.of("teacher FirstName", teacherDTO.getFirstName(), "teacher LastName", teacherDTO.getLastName()), null));
+	}
+	
+	   @GetMapping("/pagination")
+	    public ResponseEntity<APiResponse<List<TeacherEntity>>> filterTeacher(
+	            @RequestParam String orgId,
+	            @RequestParam(defaultValue = "") String searchText,
+	            @RequestParam(defaultValue = "0") int page,
+	            @RequestParam(defaultValue = "10") int size,
+	            @RequestParam(defaultValue = "teacher_name") String sortBy,
+	            @RequestParam(defaultValue = "asc") String sortOrder
+	    ) {
+
+	        Page<TeacherEntity> val  =   _iTeacherService.search(orgId, searchText, page, size, sortBy, sortOrder);
+	        return ResponseEntity.ok(
+	                new APiResponse<>(
+	                        "success" ,
+	                        "Data fetched successfully" ,
+	                        _iTeacherService.search(orgId, searchText, page, size, sortBy, sortOrder).getContent(),
+	                        Map.of(
+	                                "currentPage", val.getNumber(),
+	                                "totalPages", val.getTotalPages(),
+	                                "totalItems", val.getTotalElements()
+	                        )));
+	    }
+}
 //
 //
 //	public TeacherController(final TeacherServiceImpl teacherService

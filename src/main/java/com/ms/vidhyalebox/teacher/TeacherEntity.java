@@ -1,21 +1,42 @@
-//package com.ms.vidhyalebox.teacher;
-//
-//
+package com.ms.vidhyalebox.teacher;
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
 //import com.ms.shared.util.util.domain.GenericEntity;
 //import com.ms.vidhyalebox.role.RoleEntity;
-//import jakarta.persistence.*;
-//import lombok.Data;
-//import lombok.EqualsAndHashCode;
-//import lombok.ToString;
+import com.ms.vidhyalebox.orgclient.OrgClientEntity;
+import com.ms.vidhyalebox.salary.SalaryEntity;
+import com.ms.vidhyalebox.user.UserEntity;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 //
 //import java.util.Date;
 //
-//@Data
-//@ToString(callSuper = true)
-//@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-//@Entity
-//@Table(name = "teacher")
-//public class TeacherEntity extends GenericEntity {
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@Entity
+@Table(name = "teacher")
+public class TeacherEntity extends GenericEntity {
+	
+	@ManyToOne
+	@JoinColumn(name = "orgUniqId", nullable = false)
+	private OrgClientEntity school;
+	
+	@OneToOne
+	@JoinColumn(name = "userId", nullable = false)
+	private UserEntity user;
+	
+	@OneToOne
+	@JoinColumn(name = "totalMonthLeave", nullable = false)
+	private LeaveSettingsEntity leavesettings;
+	
+	@OneToOne
+	@JoinColumn(name = "salaryId")
+    private SalaryEntity salary;
+}
 //
 //	@Column(name = "org_uniq_id")
 //	private String orgUniqId;

@@ -1,16 +1,36 @@
-//package com.ms.vidhyalebox.teacher;
+package com.ms.vidhyalebox.teacher;
 //
 //import com.ms.shared.api.auth.TeacherSignupRequestDTO;
 //import com.ms.shared.api.auth.TeacherSignupResponseDTO;
 //import com.ms.shared.api.generic.GenericDTO;
 //import com.ms.vidhyalebox.utility.VidhyaleBoxUtil;
-//import com.ms.shared.util.util.TILServiceUtil;
-//import com.ms.shared.util.util.bl.IMapperNormal;
 //import com.ms.shared.util.util.domain.GenericEntity;
-//import org.springframework.stereotype.Service;
+import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.util.bl.IMapperNormal;
+import com.ms.vidhyalebox.util.domain.GenericEntity;
+import org.springframework.stereotype.Service;
 //
-//@Service
-//public class TeacherMapperNormal implements IMapperNormal {
+@Service
+public class TeacherMapperNormal implements IMapperNormal {
+	
+	@Override
+	public GenericEntity dtoToEntity(GenericDTO genericDto, GenericEntity genericEntity) {
+		
+		TeacherEntity entity = genericEntity == null ? new TeacherEntity() : (TeacherEntity)genericEntity;
+		
+		return entity;
+		
+	}
+	
+	@Override
+	  public GenericDTO entityToDto(GenericEntity genericEntity) { 
+		TeacherEntity entity = (TeacherEntity)genericEntity;
+		
+		return null;
+	}
+	
+	
+}
 //
 //	@Override
 //	public GenericEntity dtoToEntity(GenericDTO genericDto, GenericEntity genericEntity) {
