@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ms.vidhyalebox.sharedapi.classsubjectDTO.ClassSubjectDTO;
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
 import com.ms.vidhyalebox.subject.SubjectRepo;
 import com.ms.vidhyalebox.util.bl.IGenericService;

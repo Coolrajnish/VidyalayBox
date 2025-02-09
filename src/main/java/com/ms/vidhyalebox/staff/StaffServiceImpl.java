@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsRepo;
-import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollEntity;

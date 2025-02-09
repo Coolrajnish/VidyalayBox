@@ -1,13 +1,20 @@
 package com.ms.vidhyalebox.student;
 
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,10 +28,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
-import com.ms.vidhyalebox.sharedapi.studentDTO.StudentDTO;
-import com.ms.vidhyalebox.sharedapi.studentDTO.StudentTransferDTO;
+import com.ms.vidhyalebox.user.IUserRepo;
+import com.ms.vidhyalebox.user.UserEntity;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
@@ -35,10 +41,15 @@ import com.ms.vidhyalebox.util.rest.GenericController;
 @RequestMapping("/student")
 public class StudentController extends GenericController<StudentDTO, Long> {
 
+	@Value("${image.storage.path}")
+	private String storagePath; 
+	
     private final StudentServiceImpl _studentService;
+    private final IUserRepo userRepo;
 
-    public StudentController(StudentServiceImpl studentService) {
+    public StudentController(StudentServiceImpl studentService, IUserRepo userRepo) {
         _studentService = studentService;
+		this.userRepo = userRepo;
     }
 
     @PostMapping("/transfer")
@@ -84,6 +95,32 @@ public class StudentController extends GenericController<StudentDTO, Long> {
         ));
     }
 
+    @GetMapping("/getimage")
+    public ResponseEntity<Resource> getImage(@RequestParam String userId) {
+        try {
+        	Optional<UserEntity> imageEntityOptional = userRepo.findById(Long.valueOf( userId));
+        	Resource resource = null;
+        	Path imagePath = null;
+    		if (imageEntityOptional.isPresent()) {
+    			 imagePath = Paths.get(imageEntityOptional.get().getImage());
+    			resource = new FileSystemResource(imagePath);
+    		} else {
+    			throw new FileNotFoundException("Image not found");
+    		}
+            if (!resource.exists()) {
+                throw new FileNotFoundException("Image not found");
+            }
+
+            String contentType = Files.probeContentType(imagePath);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    
     @Override
     public IGenericService<GenericEntity, Long> getService() {
         return _studentService;

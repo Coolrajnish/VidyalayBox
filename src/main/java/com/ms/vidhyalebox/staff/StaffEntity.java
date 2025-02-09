@@ -6,8 +6,6 @@ import com.ms.vidhyalebox.salary.SalaryEntity;
 import com.ms.vidhyalebox.user.UserEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

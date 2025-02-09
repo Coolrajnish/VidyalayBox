@@ -1,7 +1,6 @@
 package com.ms.vidhyalebox.payrollSettings;
 
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
-import com.ms.vidhyalebox.salary.SalaryEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 import jakarta.persistence.Column;
@@ -37,5 +36,4 @@ public class PayrollEntity extends GenericEntity {
 	private String percentage;
 	
 	
-
 }

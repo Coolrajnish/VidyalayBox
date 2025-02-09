@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
-import com.ms.vidhyalebox.sharedapi.shiftDTO.ShiftDTO;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
