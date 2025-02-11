@@ -39,7 +39,7 @@ public class ExpenseController extends GenericController<ExpenseDTO, Long> {
                @RequestParam(defaultValue = "") String searchText,
                @RequestParam(defaultValue = "0") int page,
                @RequestParam(defaultValue = "10") int size,
-               @RequestParam(defaultValue = "stream_name") String sortBy,
+               @RequestParam(defaultValue = "id") String sortBy,
                @RequestParam(defaultValue = "asc") String sortOrder
        ){
     	Page<ExpenseEntity> val = _expenseService.search(orgId, searchText, page, size, sortBy, sortOrder);

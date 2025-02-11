@@ -59,7 +59,7 @@ public class TeacherController extends GenericController<TeacherDTO, Long> {
 	            @RequestParam(defaultValue = "") String searchText,
 	            @RequestParam(defaultValue = "0") int page,
 	            @RequestParam(defaultValue = "10") int size,
-	            @RequestParam(defaultValue = "teacher_name") String sortBy,
+	            @RequestParam(defaultValue = "id") String sortBy,
 	            @RequestParam(defaultValue = "asc") String sortOrder
 	    ) {
 

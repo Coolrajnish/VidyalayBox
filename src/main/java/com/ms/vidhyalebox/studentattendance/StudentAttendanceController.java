@@ -37,7 +37,7 @@ public class StudentAttendanceController extends GenericController<StudentAttend
 	@GetMapping("/pagination")
 	public ResponseEntity<APiResponse<List<StudentAttendanceEntity>>> filterStream(@RequestParam String orgId,
 			@RequestParam(defaultValue = "") String searchText, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "stream_name") String sortBy,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy,
 			@RequestParam(defaultValue = "asc") String sortOrder) {
 		Page<StudentAttendanceEntity> val = _expenseService.search(orgId, searchText, page, size, sortBy, sortOrder);
 		return ResponseEntity.ok(new APiResponse<>("success", "Data fetched successfully",

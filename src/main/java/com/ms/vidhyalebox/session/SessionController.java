@@ -41,7 +41,7 @@ public class SessionController extends GenericController<SessionDTO, Long> {
             @RequestParam(defaultValue = "") String searchText,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "session_name") String sortBy,
+            @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortOrder
     ) {
 

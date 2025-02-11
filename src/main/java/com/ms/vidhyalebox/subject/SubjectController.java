@@ -40,7 +40,7 @@ public class SubjectController extends GenericController<SubjectDTO, Long> {
                @RequestParam(defaultValue = "") String searchText,
                @RequestParam(defaultValue = "0") int page,
                @RequestParam(defaultValue = "10") int size,
-               @RequestParam(defaultValue = "subject_name") String sortBy,
+               @RequestParam(defaultValue = "id") String sortBy,
                @RequestParam(defaultValue = "asc") String sortOrder
        ){
     	Page<SubjectEntity> val =  _subjectService.search(orgId, searchText, page, size, sortBy, sortOrder);

@@ -40,7 +40,7 @@ public class ShiftController extends GenericController<ShiftDTO, Long> {
             @RequestParam(defaultValue = "") String searchText,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "shift_name") String sortBy,
+            @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortOrder
     ){
     	Page<ShiftEntity> val = _shiftService.search(orgId, searchText, page, size, sortBy, sortOrder);

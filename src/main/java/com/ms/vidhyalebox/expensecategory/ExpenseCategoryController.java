@@ -39,7 +39,7 @@ public class ExpenseCategoryController extends GenericController<ExpenseCategory
                @RequestParam(defaultValue = "") String searchText,
                @RequestParam(defaultValue = "0") int page,
                @RequestParam(defaultValue = "10") int size,
-               @RequestParam(defaultValue = "stream_name") String sortBy,
+               @RequestParam(defaultValue = "id") String sortBy,
                @RequestParam(defaultValue = "asc") String sortOrder
        ){
     	Page<ExpenseCategoryEntity> val = _expenseService.search(orgId, searchText, page, size, sortBy, sortOrder);
