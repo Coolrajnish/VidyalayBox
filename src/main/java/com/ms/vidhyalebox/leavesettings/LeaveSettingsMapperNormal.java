@@ -30,6 +30,7 @@ public class LeaveSettingsMapperNormal implements IMapperNormal {
 		entity.setSchool(orgRepo.findByOrgUniqId(leaveSettingsDTO.getOrgUniqueId()).get());
 		entity.setHoliday(leaveSettingsDTO.getHoliday());
 		entity.setTotalLeavePerMnth(leaveSettingsDTO.getTotalLeavePerMnth());
+		entity.setSession(sesRepo.findById(Long.valueOf( leaveSettingsDTO.getSessionId())).get());
 		return entity;
 	}
 
