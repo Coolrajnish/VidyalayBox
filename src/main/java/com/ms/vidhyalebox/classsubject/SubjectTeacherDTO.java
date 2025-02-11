@@ -13,21 +13,22 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class ClassSubjectDTO extends GenericDTO {
+public class SubjectTeacherDTO extends GenericDTO {
 
     @NotEmpty(message = "Org unique Id is mandatory")
-    private String orgUniqId;
+    private Long orgUniqId;
 
     @NotEmpty(message = "Class Id is mandatory")
     private Long classId;
 
-    @NotEmpty(message = "Core subject is mandatory")
-    private List<Long> coreSubject;
+    @NotEmpty(message = "Class teacher Id is mandatory")
+    private Long teacherId;
+    
+    //One subject can have multiple teacher
+    @NotEmpty(message = "Teacher ID list is mandatory")
+    private List<Long> teacher;
 
-    @NotEmpty(message = "Elective subject is mandatory")
-    private ElectSubDTO electSubject;
-
-    @NotEmpty(message = "Subject type is mandatory")
-    private String subjectType;
+    @NotEmpty(message = "Subject ID is mandatory")
+    private Long subject;
 
 }

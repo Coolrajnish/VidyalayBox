@@ -1,6 +1,7 @@
 package com.ms.vidhyalebox.teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 //
 //
@@ -20,7 +21,7 @@ import com.ms.vidhyalebox.util.repo.GenericRepo;
 
 @Repository
 public interface ITeacherRepo extends GenericRepo<TeacherEntity, Long> {
-	
+	@Query(value = "SELECT * FROM teacher p JOIN users u on u.id = p.user_id WHERE u.org_uniq_id =:orgId  AND LOWER(u.first_name) LIKE LOWER(CONCAT(:searchText, '%') OR LOWER(u.last_name) LIKE LOWER(CONCAT( :searchText, '%') OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchText, '%')) OR LOWER(u.mobile_number) LIKE LOWER(CONCAT( :searchText, '%'))", nativeQuery = true)
 	 public Page<TeacherEntity> search(@Param("orgId") String orgId,
 	          @Param("searchText") String searchText,
 	          Pageable pageable);

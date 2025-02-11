@@ -5,6 +5,7 @@ import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.section.SectionEntity;
 import com.ms.vidhyalebox.shift.ShiftEntity;
 import com.ms.vidhyalebox.stream.StreamEntity;
+import com.ms.vidhyalebox.teacher.TeacherEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 import jakarta.persistence.Column;
@@ -35,6 +36,10 @@ public class ClassEntity extends GenericEntity {
     @JoinColumn(name = "medium_id")
     private MediumEntity medium;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_teacher_id")
+    private TeacherEntity classTeacher;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id")
     private SectionEntity sectionEntity;

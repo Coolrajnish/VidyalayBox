@@ -1,7 +1,9 @@
 package com.ms.vidhyalebox.classsubject;
 
+import com.ms.vidhyalebox.Class.ClassEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.subject.SubjectEntity;
+import com.ms.vidhyalebox.teacher.TeacherEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 import jakarta.persistence.Column;
@@ -24,9 +26,14 @@ public class ClassSubjectEntity extends GenericEntity {
     @JoinColumn(name = "orgUniqId", nullable = false)
     private OrgClientEntity school;
 
-    @Column(name = "class_name")
-    private String classname;
+    @ManyToOne
+    @JoinColumn(name = "class_id")
+    private ClassEntity classname;
 
+    @ManyToOne
+    @JoinColumn(name = "subject_teacher_id")
+    private TeacherEntity subjectTeacher;
+    
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private SubjectEntity subjectEntity;
