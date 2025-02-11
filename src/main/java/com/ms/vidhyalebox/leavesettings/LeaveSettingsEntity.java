@@ -31,6 +31,7 @@ public class LeaveSettingsEntity extends GenericEntity {
     @Column(name = "totalLeavePerMnth")
     private String totalLeavePerMnth;
     
+    //sun-mon
     @Column(name = "holiday")
     private String holiday;
     
