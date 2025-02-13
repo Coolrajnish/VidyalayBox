@@ -28,6 +28,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APiResponse<Object>> handleGenericException(Exception ex) {
+    	ex.printStackTrace();
         logger.error("An unexpected error occurred: " + ex.getMessage());
         APiResponse<Object> errorResponse = new APiResponse<>(
                 "error",

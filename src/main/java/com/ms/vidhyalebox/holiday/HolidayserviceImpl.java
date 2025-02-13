@@ -1,5 +1,6 @@
 package com.ms.vidhyalebox.holiday;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,40 +16,55 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 @Service
 public class HolidayserviceImpl extends GenericService<GenericEntity, Long> implements HolidayService {
 
-    private final HolidayRepo expenseCRepo;
-    private final HolidayMapperNormal  expenseCMapperNormal;
+	@Autowired
+	HolidayRepo holidayRepo;
 
-    public HolidayserviceImpl(HolidayRepo expenseCRepo, HolidayMapperNormal expenseCMapperNormal) {
-        this.expenseCRepo = expenseCRepo;
-        this.expenseCMapperNormal = expenseCMapperNormal;
-    }
+	@Autowired
+	HolidayMapperNormal holidayMapperNormal;
 
-    @Override
-    public JpaRepository getRepo() {
-        return expenseCRepo;
-    }
+	// @Autowired
+	// HolidayMapper holidayMapper;
 
-    @Override
-    public IMapperNormal getMapper() {
-        return expenseCMapperNormal;
-    }
+//    public HolidayserviceImpl(HolidayRepo holidayRepo, HolidayMapperNormal holidayMapperNormal) {
+//        this.holidayRepo = holidayRepo;
+//        this.holidayMapperNormal = holidayMapperNormal;
+//    }
 
-    @Transactional
+	@Override
+	public JpaRepository getRepo() {
+		return holidayRepo;
+	}
+
+	@Override
+	public IMapperNormal getMapper() {
+		return holidayMapperNormal;
+	}
+
+	@Transactional
 	@Override
 	public Page<HolidayEntity> search(String orgId, String searchText, int page, int size, String sortBy,
 			String sortOrder) {
 		// TODO Auto-generated method stub
 		Pageable pageable = null;
-		if(sortBy.isEmpty()) {
+		if (sortBy.isEmpty()) {
 			pageable = PageRequest.of(page, size);
-		}else {
-			pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc")?
-					Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());	
+		} else {
+			pageable = PageRequest.of(page, size,
+					sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 		}
-		if(!orgId.isEmpty()) {
-			return expenseCRepo.search(orgId, searchText, pageable);
-		}else {
-			return expenseCRepo.findAll(pageable);
+		if (!orgId.isEmpty()) {
+			return holidayRepo.search(orgId, searchText, pageable);
+		} else {
+			return holidayRepo.findAll(pageable);
 		}
+	}
+
+	@Transactional
+	@Override
+	public HolidayEntity updateHolidatFromDTO(HolidayDTO holidayDTO) {
+		HolidayEntity holiday = holidayRepo.findById( (Long) holidayDTO.getId()).get();
+		holiday = (HolidayEntity) holidayMapperNormal.dtoToEntity(holidayDTO, holiday);
+		holidayRepo.save(holiday);
+		return holiday;
 	}
 }

@@ -37,6 +37,6 @@ public class HolidayEntity extends GenericEntity {
     
     @OneToOne
     @JoinColumn(name = "session_id", nullable = false)
-    private SessionEntity session;
+    private SessionEntity sessionId;
     
 }

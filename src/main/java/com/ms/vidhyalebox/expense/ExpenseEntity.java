@@ -38,11 +38,11 @@ public class ExpenseEntity extends GenericEntity {
     @Column(name = "descr")
     private String descr;
     
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "expense_category_id", nullable = false)
     private ExpenseCategoryEntity expensecategory;
-    
-    @OneToOne
+     
+    @ManyToOne
     @JoinColumn(name = "session_id", nullable = false)
     private SessionEntity session;
     

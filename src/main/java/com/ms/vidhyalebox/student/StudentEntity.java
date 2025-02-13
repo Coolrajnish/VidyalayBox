@@ -1,16 +1,22 @@
 package com.ms.vidhyalebox.student;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ms.vidhyalebox.Class.ClassEntity;
+import com.ms.vidhyalebox.assignmentstudent.StudentAssignmentEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.parent.ParentEntity;
 import com.ms.vidhyalebox.session.SessionEntity;
 import com.ms.vidhyalebox.user.UserEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -24,44 +30,46 @@ import lombok.ToString;
 @Table(name = "student")
 public class StudentEntity extends GenericEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "orgUniqId", nullable = false)
-    private OrgClientEntity school;
+	@ManyToOne
+	@JoinColumn(name = "orgUniqId", nullable = false)
+	private OrgClientEntity school;
 
-    @OneToOne
-    @JoinColumn(name = "userId", nullable = false)
-    private UserEntity user;
+	@OneToOne
+	@JoinColumn(name = "userId", nullable = false)
+	private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name = "sessionId", nullable = false)
-    private SessionEntity sessionEntity;
+	@ManyToOne
+	@JoinColumn(name = "sessionId", nullable = false)
+	private SessionEntity sessionEntity;
 
-    @ManyToOne
-    @JoinColumn(name = "classId",  nullable = false)
-    private ClassEntity classEntity;
+	@ManyToOne
+	@JoinColumn(name = "classId", nullable = false)
+	private ClassEntity classEntity;
 
-    @ManyToOne
-    @JoinColumn(name = "parentId", nullable = false)
-    private ParentEntity parentEntity;
+	@ManyToOne
+	@JoinColumn(name = "parentId", nullable = false)
+	private ParentEntity parentEntity;
 
-    
-    //redundant data should be removed
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+	// redundant data should be removed
+	@Column(name = "is_active", nullable = false)
+	private boolean isActive = true;
 
-    @Column(name = "admissionDate")
-    private String admissionDate;
+	@Column(name = "admissionDate")
+	private String admissionDate;
 
-    @Column(name = "bloodGroup")
-    private String bloodGroup;
+	@Column(name = "bloodGroup")
+	private String bloodGroup;
 
-    @Column(name = "emergencyContact")
-    private String emergencyContact;
+	@Column(name = "emergencyContact")
+	private String emergencyContact;
 
-    @Column(name = "permanentAddress")
-    private String permanentAddress;
-    
-    @Column(name = "admissionNumber")
-    private String admissionNumber;
+	@Column(name = "permanentAddress")
+	private String permanentAddress;
+
+	@Column(name = "admissionNumber")
+	private String admissionNumber;
+
+	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+	private List<StudentAssignmentEntity> submissions = new ArrayList<>();
 
 }

@@ -1,4 +1,4 @@
-package com.ms.vidhyalebox.holiday;
+package com.ms.vidhyalebox.assignmentstudent;
 
 import java.util.List;
 import java.util.Map;
@@ -8,9 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,37 +20,29 @@ import com.ms.vidhyalebox.util.rest.GenericController;
 @CrossOrigin(origins = "*")
 @RestController
 @Validated
-@RequestMapping("/holiday")
-public class HolidayController extends GenericController<HolidayDTO, Long> {
+@RequestMapping("/studentassignment")
+public class StudentAssignmentController extends GenericController<StudentAssignmentDTO, Long> {
 
-	private final HolidayserviceImpl holidayService;
+	private final StudentAssignmentserviceImpl _assignmentService;
 
-	public HolidayController(HolidayserviceImpl expenseService) {
-		holidayService = expenseService;
+	public StudentAssignmentController(StudentAssignmentserviceImpl assignmentService) {
+		_assignmentService = assignmentService;
 	}
 
 	@Override
 	public IGenericService<GenericEntity, Long> getService() {
-		return holidayService;
+		return _assignmentService;
 	}
 
 	@GetMapping("/pagination")
-	public ResponseEntity<APiResponse<List<HolidayEntity>>> filterStream(@RequestParam String orgId,
+	public ResponseEntity<APiResponse<List<StudentAssignmentEntity>>> filterStream(@RequestParam String orgId,
 			@RequestParam(defaultValue = "") String searchText, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy,
 			@RequestParam(defaultValue = "asc") String sortOrder) {
-		Page<HolidayEntity> val = holidayService.search(orgId, searchText, page, size, sortBy, sortOrder);
+		Page<StudentAssignmentEntity> val = _assignmentService.search(orgId, searchText, page, size, sortBy, sortOrder);
 		return ResponseEntity.ok(new APiResponse<>("success", "Data fetched successfully",
-				holidayService.search(orgId, searchText, page, size, sortBy, sortOrder).getContent(),
+				_assignmentService.search(orgId, searchText, page, size, sortBy, sortOrder).getContent(),
 				Map.of("currentPage", val.getNumber(), "totalPages", val.getTotalPages(), "totalItems",
 						val.getTotalElements())));
 	}
-	
-	@PatchMapping("/update/{id}")
-    public ResponseEntity<HolidayEntity> updateUser(@PathVariable Long id, @RequestBody HolidayDTO holidayDTO) {
-		holidayDTO.setId(id);
-        HolidayEntity updatedUser = holidayService.updateHolidatFromDTO( holidayDTO);
-        return ResponseEntity.ok(updatedUser);
-    }
-	
 }

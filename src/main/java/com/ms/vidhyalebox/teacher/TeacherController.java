@@ -53,6 +53,26 @@ public class TeacherController extends GenericController<TeacherDTO, Long> {
 				Map.of("teacher FirstName", teacherDTO.getFirstName(), "teacher LastName", teacherDTO.getLastName()), null));
 	}
 	
+	@PatchMapping(path = "/modify/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+	public ResponseEntity<APiResponse<Object>> modifyTeacher(@PathVariable Long id, @RequestPart("teacherDTO") TeacherDTO teacherDTO,
+			                       @RequestParam("image") MultipartFile image){
+
+		try {
+			teacherDTO.setId(id);
+			_iTeacherService.modifyTeacher(teacherDTO, image);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO Auto-generated catch block
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new APiResponse<>("error", "Teacher regestration failed - " + e.getLocalizedMessage(), Map
+							.of("teacher FirstName", teacherDTO.getFirstName(), "teacher LastName", teacherDTO.getLastName()),
+							null));
+		}
+		
+		return ResponseEntity.ok(new APiResponse<>("success", "Teacher registered successfully",
+				null, null));
+	}
+	
 	   @GetMapping("/pagination")
 	    public ResponseEntity<APiResponse<List<TeacherEntity>>> filterTeacher(
 	            @RequestParam String orgId,

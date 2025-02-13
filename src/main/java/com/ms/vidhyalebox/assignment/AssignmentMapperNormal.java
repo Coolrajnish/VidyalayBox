@@ -49,11 +49,11 @@ public class AssignmentMapperNormal implements IMapperNormal {
 			entity.setSubject(subRepo.findById(Long.valueOf(assignmentDTO.getSubjectId())).orElse(null)); // orElse
 		}
 		if (assignmentDTO.getCreatedById() != null) {
-			entity.setCreatTeacher(trepo.findById(Long.valueOf(assignmentDTO.getCreatedById())).orElse(null)); // orElse
+			entity.setTeacher(trepo.findById(Long.valueOf(assignmentDTO.getCreatedById())).orElse(null)); // orElse
 		}
-		if (assignmentDTO.getEditTeacherId() != null) {
-			entity.setEditTeacher(trepo.findById(Long.valueOf(assignmentDTO.getEditTeacherId())).orElse(null)); // orElse
-		}
+		//if (assignmentDTO.getEditTeacherId() != null) {
+	//		entity.setEditTeacher(trepo.findById(Long.valueOf(assignmentDTO.getEditTeacherId())).orElse(null)); // orElse
+	//	}
 		if (VidhyaleBoxUtil.isNullOrBlank( assignmentDTO.getAssignmentName())) {
 			entity.setAssignmentName(assignmentDTO.getAssignmentName());
 		}
@@ -82,7 +82,7 @@ public class AssignmentMapperNormal implements IMapperNormal {
 		assignmentCDTO.setAssignmentName(entity.getAssignmentName());
 		assignmentCDTO.setDescription(entity.getDescription());
 		assignmentCDTO.setClassId(entity.getClassName().getId());
-		assignmentCDTO.setId(entity.getId());
+		//assignmentCDTO.setId(entity.getId());
 
 		return assignmentCDTO;
 	}

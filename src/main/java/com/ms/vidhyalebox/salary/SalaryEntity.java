@@ -12,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -34,10 +35,10 @@ public class SalaryEntity extends GenericEntity {
 	@OneToOne
     @JoinColumn(name = "userId", nullable = false, unique = true)
     private UserEntity user; 
-
+ 
     @Column(nullable = false)
     private BigDecimal basicSalary; // Basic salary amount
-
+ 
     @Column(name = "netSalary")
     private BigDecimal netSalary; // Calculated as (basicSalary + allowances - deductions)
 
@@ -47,7 +48,7 @@ public class SalaryEntity extends GenericEntity {
     @Column(name = "paymentStatus")
     private String paymentStatus = "PENDING"; 
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(
         name = "salary_payroll", 
         joinColumns = @JoinColumn(name = "salary_id"), 

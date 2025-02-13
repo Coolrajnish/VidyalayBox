@@ -27,7 +27,7 @@ public class AssignmentDTO extends GenericDTO {
 
 	private Long createdById;
 
-	private Long editTeacherId;
+	//private Long editTeacherId;
 
 	private String dueDate;
 

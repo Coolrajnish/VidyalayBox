@@ -30,12 +30,12 @@ public class StaffEntity extends GenericEntity {
 	@JoinColumn(name = "userId", nullable = false)
 	private UserEntity user;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "totalMonthLeave", nullable = false)
 	private LeaveSettingsEntity leavesettings;
 	
 	@OneToOne
 	@JoinColumn(name = "salaryId")
     private SalaryEntity salary;
-
+ 
 }

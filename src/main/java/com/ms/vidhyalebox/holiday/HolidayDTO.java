@@ -14,7 +14,7 @@ import lombok.ToString;
 public class HolidayDTO extends GenericDTO {
 
     @NotEmpty(message = "Org unique ID is mandatory")
-    private String orgUniqId;
+    private String school;
 
     @NotEmpty(message = "Title is mandatory")
     private String title;

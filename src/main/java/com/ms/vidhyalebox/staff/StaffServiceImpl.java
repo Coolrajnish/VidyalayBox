@@ -46,11 +46,11 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 	private final PayrollRepo payrollRepo;
 	private final SalaryRepo salaryrepo;
 	//private SessionRepo sessionRepo;
-	//private final StaffMapperNormal _staffMapperNormal;
+	private final StaffMapperNormal _staffMapperNormal;
 	//private final RoleRepo roleRepo;
 
 	@Autowired
-	public StaffServiceImpl(IStaffRepo iStaffRepo, PasswordEncoder passwordEncoder,
+	public StaffServiceImpl( StaffMapperNormal _staffMapperNormal,IStaffRepo iStaffRepo, PasswordEncoder passwordEncoder,
 			 IUserService userService, IOrgClientRepo orgClientRepo,
 			 LeaveSettingsRepo leave, IUserRepo userRepo, PayrollRepo payrollRepo, SalaryRepo salaryrepo) {
 		this._iStaffRepo = iStaffRepo;
@@ -63,6 +63,7 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 		//this.roleRepo = roleRepo;
 		this.payrollRepo = payrollRepo;
 		this.salaryrepo = salaryrepo;
+		this._staffMapperNormal = _staffMapperNormal;
 	}
 
 	@Transactional
@@ -144,15 +145,15 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 	}
 
 	@Override
-	public JpaRepository<GenericEntity, Object> getRepo() {
+	public JpaRepository getRepo() {
 		// TODO Auto-generated method stub
-		return null;
+		return _iStaffRepo;
 	}
 
 	@Override
 	public IMapperNormal getMapper() {
 		// TODO Auto-generated method stub
-		return null;
+		return  _staffMapperNormal;
 	}
 	
     @Transactional

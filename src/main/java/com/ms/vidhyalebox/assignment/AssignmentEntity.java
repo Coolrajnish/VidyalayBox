@@ -1,16 +1,22 @@
 package com.ms.vidhyalebox.assignment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ms.vidhyalebox.Class.ClassEntity;
+import com.ms.vidhyalebox.assignmentstudent.StudentAssignmentEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.session.SessionEntity;
 import com.ms.vidhyalebox.subject.SubjectEntity;
 import com.ms.vidhyalebox.teacher.TeacherEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -40,12 +46,8 @@ public class AssignmentEntity extends GenericEntity {
 	private SubjectEntity subject;
 
 	@ManyToOne
-	@JoinColumn(name = "createTeacherId", nullable = false)
-	private TeacherEntity creatTeacher;
-
-	@ManyToOne
-	@JoinColumn(name = "editTeacherId", nullable = false)
-	private TeacherEntity editTeacher;
+	@JoinColumn(name = "teacherId", nullable = false)
+	private TeacherEntity teacher;
 
 	@Column(name = "dueDate", nullable = false)
 	private String dueDate;
@@ -53,14 +55,14 @@ public class AssignmentEntity extends GenericEntity {
 	@Column(name = "descr", nullable = false)
 	private String description;
 
-	// @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
-	// private List<StudentAssignment> submissions = new ArrayList()<>();
+	@OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
+	 private List<StudentAssignmentEntity> submissions = new ArrayList<>();
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "session_id", nullable = false)
 	private SessionEntity session;
 
-	@Column(name = "resubmissionDays", nullable = false)
+	@Column(name = "resubmissionDays", nullable = false) 
 	private String resubmissionDays;
 
 	@Column(name = "points", nullable = false)

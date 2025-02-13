@@ -16,6 +16,7 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 public interface ITeacherService extends IGenericService<GenericEntity, Long> {
 	
 	 public String addTeacher(TeacherDTO teacherDTO, MultipartFile image);
+	 public String modifyTeacher(TeacherDTO teacherDTO, MultipartFile image);
 	 public Page<TeacherEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder);
 }
 //    boolean isEmailAlreadyExist(final String emailAddress);

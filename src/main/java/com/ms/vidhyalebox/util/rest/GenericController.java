@@ -115,7 +115,7 @@ public abstract class GenericController<E extends GenericDTO, K>{
 	@RolesAllowed({ "CLIENT", "ADMIN" })
 	public GenericResponse updateFullObject(@RequestHeader("Authorization") String token, @PathVariable K id, @Validated @RequestBody E request) throws FatalException {
 		setAuthToken(token);
-		request.setId(Long.toString((Long) id));
+		request.setId(id);
 		GenericDTO genericDTO = getService().update(request);
 		genericDTO.setId(id);
 		List<GenericDTO> genericDTOs = new ArrayList<>();

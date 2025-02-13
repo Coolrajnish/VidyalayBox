@@ -16,7 +16,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 public class JwtTokenProvider {
 
     private final String jwtSecret = "tRaDeiTlAzy";  // Store in environment variables for security.
-    private final long jwtExpirationInMs = 3600000; // 1 hour
+    private final long jwtExpirationInMs = 360000000; // 1 hour
 
     public String generateToken(String username) {
         return Jwts.builder()

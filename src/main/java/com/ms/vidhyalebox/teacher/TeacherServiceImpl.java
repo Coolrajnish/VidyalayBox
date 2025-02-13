@@ -1,4 +1,5 @@
 package com.ms.vidhyalebox.teacher;
+
 //
 //import com.ms.shared.api.auth.SignupRequestDTO;
 //import com.ms.shared.api.auth.TeacherSignupRequestDTO;
@@ -27,6 +28,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +40,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ms.vidhyalebox.auth.AuthController;
+import com.ms.vidhyalebox.holiday.HolidayEntity;
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsRepo;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
@@ -58,7 +63,9 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class TeacherServiceImpl extends GenericService<GenericEntity, Long> implements ITeacherService {
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(TeacherServiceImpl.class);
+
 	private final ITeacherRepo _iTeacherRepo;
 	private final LeaveSettingsRepo leave;
 	private IOrgClientRepo orgClientRepo;
@@ -67,13 +74,13 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 	private final PasswordEncoder passwordEncoder;
 	private final PayrollRepo payrollRepo;
 	private final SalaryRepo salaryrepo;
-	
-	
+	private final TeacherMapperNormal teacherMapper;
+
 	@Autowired
-	public TeacherServiceImpl(ITeacherRepo iTeacherRepo,PasswordEncoder passwordEncoder,
-			 IUserService userService, IOrgClientRepo orgClientRepo,
-			 LeaveSettingsRepo leave, IUserRepo userRepo, PayrollRepo payrollRepo, SalaryRepo salaryrepo) {
-		
+	public TeacherServiceImpl(TeacherMapperNormal teacherMapper, ITeacherRepo iTeacherRepo,
+			PasswordEncoder passwordEncoder, IUserService userService, IOrgClientRepo orgClientRepo,
+			LeaveSettingsRepo leave, IUserRepo userRepo, PayrollRepo payrollRepo, SalaryRepo salaryrepo) {
+
 		this._iTeacherRepo = iTeacherRepo;
 		this.passwordEncoder = passwordEncoder;
 		this.leave = leave;
@@ -82,7 +89,8 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 		this.userService = userService;
 		this.payrollRepo = payrollRepo;
 		this.salaryrepo = salaryrepo;
-		
+		this.teacherMapper = teacherMapper;
+
 	}
 
 	@Transactional
@@ -98,10 +106,10 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 			salary.setPaymentDate(LocalDate.now().plusDays(30).toString());
 			salary.setPaymentStatus("PENDING");
 			salary.setSchool(orgClientRepo.findByOrgUniqId(teacherDTO.getSchool()).get());
-			List<PayrollEntity> payrolls = new ArrayList<PayrollEntity>(); 
-			for(Long id : teacherDTO.getPayroll()) {
-			payrolls.add(payrollRepo.findById(id).get());
-		}
+			List<PayrollEntity> payrolls = new ArrayList<PayrollEntity>();
+			for (Long id : teacherDTO.getPayroll()) {
+				payrolls.add(payrollRepo.findById(id).get());
+			}
 			salary.setPayrolls(payrolls);
 			long total = Long.valueOf(teacherDTO.getSalary());
 			for (PayrollEntity pay : payrolls) {
@@ -118,9 +126,9 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 				} else {
 					total -= amount;
 				}
-				
+
 			}
-			
+
 			salary.setNetSalary(BigDecimal.valueOf(total));
 			var user = new UserEntity();
 			user.setEmail(teacherDTO.getEmail());
@@ -137,32 +145,45 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 			user.setImage(userService.saveImage(image, teacherDTO.getSchool() + "_teacher"));
 			var userEntity = userRepo.save(user);
 			salary.setUser(userEntity);
-			
+
 			var entity = new TeacherEntity();
 			entity.setUser(userEntity);
 			OrgClientEntity school = orgClientRepo.findByOrgUniqId(teacherDTO.getSchool()).get();
 			entity.setSchool(school);
-			List<LeaveSettingsEntity> leavesettings = leave.getLeaveSettings( ""+school.getId()).get();
-			LeaveSettingsEntity leaveisactive = null;
-			for(LeaveSettingsEntity leaveval : leavesettings) {
-				if(leaveval.getSession().isActive()) {
-					leaveisactive = leaveval;
-				}
-			}
-			salary =  salaryrepo.save(salary);
-			entity.setLeavesettings(leaveisactive);
+			LeaveSettingsEntity leavesettings = leave.getLeaveSettings(String.valueOf(school.getId())).get();
+			salary = salaryrepo.save(salary);
+			entity.setLeavesettings(leavesettings);
+			salary = salaryrepo.save(salary);
 			entity.setSalary(salary);
+			entity.setQualification(teacherDTO.getQualification());
+			entity.setCurrentAddr(teacherDTO.getCurrentAddr());
+			entity.setPermanentAddr(teacherDTO.getPermanentAddr());
 			_iTeacherRepo.save(entity);
-	}
-		 catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-			return "Teacher added";
+		return "Teacher added";
+	}
+
+	@Transactional
+	@Override
+	public String modifyTeacher(TeacherDTO teacherDTO, MultipartFile image) {
+
+		try {
+			TeacherEntity entity = _iTeacherRepo.findById((Long) teacherDTO.getId()).get();
+			entity = (TeacherEntity) teacherMapper.dtoToEntity(teacherDTO, entity);
+			_iTeacherRepo.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("error -->", e.getStackTrace());
+		}
+
+		return null;
 	}
 
 	@Transactional
@@ -170,18 +191,18 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 	public Page<TeacherEntity> search(String orgId, String searchText, int page, int size, String sortBy,
 			String sortOrder) {
 		// TODO Auto-generated method stub
-	     Pageable pageable = null;
-	        if(sortBy.isEmpty()){
-	             pageable = PageRequest.of(page, size);
-	        } else {
-	             pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc") ?
-	                    Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
-	        }
-	        if(!orgId.isEmpty() ){
-	            return _iTeacherRepo.search(orgId, searchText, pageable);
-	        } else {
-	            return _iTeacherRepo.findAll(pageable);
-	        }
+		Pageable pageable = null;
+		if (sortBy.isEmpty()) {
+			pageable = PageRequest.of(page, size);
+		} else {
+			pageable = PageRequest.of(page, size,
+					sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+		}
+		if (!orgId.isEmpty()) {
+			return _iTeacherRepo.search(orgId, searchText, pageable);
+		} else {
+			return _iTeacherRepo.findAll(pageable);
+		}
 	}
 
 	@Override
@@ -195,8 +216,7 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
 }
 //
 //	private final ITeacherRepo teacherRepo;
