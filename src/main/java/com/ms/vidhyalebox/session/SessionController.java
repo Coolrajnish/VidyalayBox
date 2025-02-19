@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,5 +73,18 @@ public class SessionController extends GenericController<SessionDTO, Long> {
 		}
 
 		return ResponseEntity.ok(new APiResponse<>("success", "Data modified successfully", entity, null));
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<APiResponse<Object>> delete(@PathVariable Long id) {
+		  try {
+			_sessionService.deleteById(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APiResponse<>("error",
+					"Data deletion failed - " + e.getLocalizedMessage(), null, null));
+		}
+		
+		return ResponseEntity.ok(new APiResponse<>("success", "Data deleted successfully", null, null));
 	}
 }

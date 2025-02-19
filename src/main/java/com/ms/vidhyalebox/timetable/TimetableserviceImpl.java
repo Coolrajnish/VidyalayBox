@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import com.ms.vidhyalebox.Class.ClassEntity;
 import com.ms.vidhyalebox.util.bl.GenericService;
 import com.ms.vidhyalebox.util.bl.IMapperNormal;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
@@ -43,5 +44,26 @@ public class TimetableserviceImpl extends GenericService<GenericEntity, Long> im
 				Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 		
 			return timetableRepo.findAll(pageable);
+	}
+
+    @Transactional
+	public TimetableEntity save(TimetableDTO dto) {
+		TimetableEntity entity = (TimetableEntity) timetableMapperNormal.dtoToEntity(dto);
+		entity = timetableRepo.save(entity);
+
+		return entity;
+	}
+
+	public TimetableEntity modify(TimetableDTO cDTO) {
+		TimetableEntity entity = null;
+		try {
+			entity = timetableRepo.findById((Long) cDTO.getId()).get();
+			entity = (TimetableEntity) timetableMapperNormal.dtoToEntity(cDTO, entity);
+			entity =  timetableRepo.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+		//	logger.error("error -->", e.getStackTrace());
+		}
+		return entity;
 	}
 }

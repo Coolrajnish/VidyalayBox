@@ -3,8 +3,11 @@ package com.ms.vidhyalebox.subject;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import com.ms.vidhyalebox.medium.MediumEntity;
+import com.ms.vidhyalebox.medium.MediumRepo;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
@@ -15,7 +18,13 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 public class SubjectMapperNormal implements IMapperNormal {
 
 	private IOrgClientRepo orgRepo;
+	
+	@Autowired
+	MediumRepo mediumRepo;
 
+	@Autowired
+	SubjectRepo subRepo;
+	
 	@Autowired
 	private SubjectMapperNormal(IOrgClientRepo orgRepo) {
 		this.orgRepo = orgRepo;
@@ -41,19 +50,23 @@ public class SubjectMapperNormal implements IMapperNormal {
 
 		// Check if subjectCode is not null before updating
 		if (subjectDTO.getSubjectCode() != null) {
+			Optional<SubjectEntity> ent = subRepo.findBySubjectCode(subjectDTO.getSubjectCode());
+			if(ent.isPresent()) {
+				throw new DuplicateKeyException("Subject code already exist");
+			}
 			entity.setSubjectCode(subjectDTO.getSubjectCode());
 		}
 
 		// Check if medium is not null before updating
-		if (subjectDTO.getMedium() != null) {
-			entity.setMedium(subjectDTO.getMedium());
+		if (subjectDTO.getMediumId() != null) {
+			entity.setMedium(mediumRepo.findById(subjectDTO.getMediumId()).get());
 		}
 
 		// Check if subjectType is not null before updating
 		if (subjectDTO.getSubjectType() != null) {
 			entity.setSubjectType(subjectDTO.getSubjectType());
 		}
-
+ 
 		// entity.setActive(subjectDTO.isActive());
 
 		return entity;
@@ -67,7 +80,7 @@ public class SubjectMapperNormal implements IMapperNormal {
 		subjectDTO.setOrgUniqId(entity.getSchool().getOrgUniqId());
 		subjectDTO.setSubjectName(entity.getSubjectName());
 		subjectDTO.setSubjectCode(entity.getSubjectCode());
-		subjectDTO.setMedium(entity.getMedium());
+	//	subjectDTO.setMedium(entity.getMedium());
 		subjectDTO.setSubjectType(entity.getSubjectType());
 		// subjectDTO.setActive(entity.getSchool().isActive());
 

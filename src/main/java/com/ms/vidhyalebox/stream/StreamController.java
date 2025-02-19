@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,4 +71,18 @@ public class StreamController extends GenericController<StreamDTO, Long> {
                         entity,
                         null));
     }
+    
+    @DeleteMapping("/delete/{id}")
+	public ResponseEntity<APiResponse<Object>> delete(@PathVariable Long id) {
+		  try {
+			_streamService.deleteById(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APiResponse<>("error",
+					"Data deletion failed - " + e.getLocalizedMessage(), null, null));
+		}
+		
+		return ResponseEntity.ok(new APiResponse<>("success", "Data deleted successfully", null, null));
+	}
+    
 }

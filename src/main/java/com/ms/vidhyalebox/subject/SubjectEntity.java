@@ -1,5 +1,7 @@
 package com.ms.vidhyalebox.subject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ms.vidhyalebox.medium.MediumEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
@@ -19,6 +21,7 @@ import lombok.ToString;
 @Table(name = "subject")
 public class SubjectEntity extends GenericEntity {
 
+	@JsonIgnore
     @ManyToOne
     @JoinColumn(name = "orgUniqId", nullable = false)
     private OrgClientEntity school;
@@ -29,10 +32,11 @@ public class SubjectEntity extends GenericEntity {
     @Column(name = "subject_code")
     private String subjectCode;
 
-    @Column(name = "medium")
-    private String medium;
+    @ManyToOne
+    @JoinColumn(name = "medium_id", nullable = false)
+    private MediumEntity medium;
 
     @Column(name = "subject_type")
-    private String subjectType;
+    private String subjectType;  //THEORY OR PRACTICAL
 
 }

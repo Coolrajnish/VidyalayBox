@@ -22,8 +22,8 @@ public class SubjectDTO extends GenericDTO {
     @NotEmpty(message = "Subject code is mandatory")
     private String subjectCode;
 
-    @NotEmpty(message = "Medium is mandatory")
-    private String medium;
+    @NotEmpty(message = "Medium ID is mandatory")
+    private Long mediumId;
 
     @NotEmpty(message = "Subject type is mandatory")
     private String subjectType;

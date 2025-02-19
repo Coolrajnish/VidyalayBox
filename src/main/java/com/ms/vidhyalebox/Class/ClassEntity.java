@@ -51,6 +51,6 @@ public class ClassEntity extends GenericEntity {
 	@JoinColumn(name = "shift_id")
 	private ShiftEntity shiftEntity;
 
-	@Column(name = "is_active", nullable = false)
+	@Column(name = "is_active")
 	private boolean isActive = true;
 }

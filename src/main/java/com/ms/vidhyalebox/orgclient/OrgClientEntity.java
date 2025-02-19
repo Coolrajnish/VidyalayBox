@@ -34,26 +34,6 @@ public class OrgClientEntity extends GenericEntity {
     @Column(name = "address")
     private String address;
 
-//    @Column(name = "country")
-//    private String country;
-//
-//    @Column(name = "state")
-//    private String state;
-//
-//    @Column(name = "district")
-//    private String district;
-//
-//    @Column(name = "area_pin")
-//    private Integer areaPin;
-//
-//    @Column(name = "web_site_url")
-//    private String webSiteUrl;
-//
-//
-//    @Column(name = "pwd")
-//    private String password;
-
-    // Additional fields for account status, if necessary
     @Column(name = "is_active")
     private boolean isActive = true; // Default to active
 

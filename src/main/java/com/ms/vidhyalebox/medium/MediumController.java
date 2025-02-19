@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
-import com.ms.vidhyalebox.teacher.TeacherDTO;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
@@ -78,4 +76,18 @@ public class MediumController extends GenericController<MediumDTO, Long> {
 
 		return ResponseEntity.ok(new APiResponse<>("success", "Data modified successfully", entity, null));
 	}
+
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<APiResponse<Object>> delete(@PathVariable Long id) {
+		  try {
+			_mediumService.deleteById(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APiResponse<>("error",
+					"Data deletion failed - " + e.getLocalizedMessage(), null, null));
+		}
+		
+		return ResponseEntity.ok(new APiResponse<>("success", "Data deleted successfully", null, null));
+	}
+
 }

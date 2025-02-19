@@ -23,7 +23,7 @@ import lombok.ToString;
 public class MediumEntity extends GenericEntity {
 
 	@JsonIgnore
-    @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "orgUniqId", nullable = false)
     private OrgClientEntity school;
 
