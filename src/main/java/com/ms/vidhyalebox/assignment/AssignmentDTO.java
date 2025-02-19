@@ -1,6 +1,11 @@
 package com.ms.vidhyalebox.assignment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
 
@@ -27,17 +32,21 @@ public class AssignmentDTO extends GenericDTO {
 
 	private Long createdById;
 
-	//private Long editTeacherId;
+	// private Long editTeacherId;
 
 	private String dueDate;
 
 	@NotEmpty(message = "Session ID is mandatory")
 	private Long session;
-	
+
 	private String description;
 
 	private String resubmissionDays;
 
 	private String points;
+
+	private String fileUrl;
+
+	private List<MultipartFile> files = new ArrayList<>();
 
 }

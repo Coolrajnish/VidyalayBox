@@ -35,6 +35,12 @@ public class StaffDTO extends GenericDTO {
 
 	@NotEmpty(message = "First name is mandatory")
 	private String joiningDate;
+	
+	@NotEmpty(message = "Current address is mandatory")
+	private String currentAddr;
+	
+	@NotEmpty(message = "Permanent address is mandatory")
+	private String permanentAddr;
 
 	@NotEmpty(message = "Salary is mandatory")
 	private String salary;
@@ -43,6 +49,8 @@ public class StaffDTO extends GenericDTO {
 	private boolean isActive;
 
 	private String identity;
+	
+	private String status;
 
 	private List<Long> payroll;
 	

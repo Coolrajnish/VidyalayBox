@@ -18,6 +18,7 @@ public class UserPrincipal implements UserDetails {
 	private Long id;
 	private String username;
 	private Long orgId;
+	private String orgUniqId;
 	private Boolean isAccountNonLocked;
 	private Boolean isAccountNonExpired;
 	private Boolean isCredentialsNonExpired;
@@ -29,12 +30,13 @@ public class UserPrincipal implements UserDetails {
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserPrincipal(final Long id, final String username,final Long orgId, final String password, final Collection<? extends GrantedAuthority> authorities,
+	public UserPrincipal(final Long id, final String username,final Long orgId,String orgUniqId, final String password, final Collection<? extends GrantedAuthority> authorities,
 						 final Boolean isActive, final Boolean isAccountNonLocked,
 						 final Boolean isAccountNonExpired, final Boolean isCredentialsNonExpired, final String identity) {
 		this.id = id;
 		this.username = username;
 		this.orgId = orgId;
+		this.orgUniqId = orgUniqId;
 		this.password = password;
 		this.authorities = authorities;
 		this.isActive = isActive;
@@ -52,6 +54,7 @@ public class UserPrincipal implements UserDetails {
 				userEntity.getId(),
 				userEntity.getMobileNumber(),
 				userEntity.getSchool().getId(),
+				userEntity.getSchool().getOrgUniqId(),
 				userEntity.getPassword(),
 				authorities,
 				userEntity.isActive(),
@@ -140,6 +143,7 @@ public class UserPrincipal implements UserDetails {
 		return this.orgId;
 	}
 
+	
 	@Override
 	public String getPassword() {
 		return this.password;
@@ -168,6 +172,10 @@ public class UserPrincipal implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return this.isActive;
+	}
+
+	public String getOrgUniqId() {
+		return orgUniqId;
 	}
 
 	@Override

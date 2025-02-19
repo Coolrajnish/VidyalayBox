@@ -21,5 +21,5 @@ public class SectionDTO extends GenericDTO {
 
   //  private ClassDTO classDTO;
 
-    private boolean isActive;
+    private boolean isActive = true;
 }

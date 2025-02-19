@@ -1,5 +1,6 @@
 package com.ms.vidhyalebox.expensecategory;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
@@ -18,7 +19,8 @@ import lombok.ToString;
 @Entity
 @Table(name = "expense_category")
 public class ExpenseCategoryEntity extends GenericEntity {
-
+	
+	@JsonIgnore
     @ManyToOne
     @JoinColumn(name = "orgUniqId", nullable = false)
     private OrgClientEntity school;

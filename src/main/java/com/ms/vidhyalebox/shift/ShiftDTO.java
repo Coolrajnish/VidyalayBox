@@ -25,5 +25,5 @@ public class ShiftDTO extends GenericDTO {
     @NotEmpty(message = "End time is mandatory")
     private String endTime;
 
-    private boolean isActive;
+    private boolean isActive = true;
 }

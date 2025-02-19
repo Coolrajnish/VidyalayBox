@@ -2,6 +2,8 @@ package com.ms.vidhyalebox.util.domain;
 
 import java.time.OffsetDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 /*
  *Company:mithlaSoftech Creation Date:2024
  *@author sumit kumar
@@ -19,24 +22,25 @@ import lombok.EqualsAndHashCode;
 @MappedSuperclass
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(ISTTimestampListener.class)
-public  class GenericEntity implements IGenericEntity {
+public class GenericEntity implements IGenericEntity {
 
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Long id; 
-	
-    @Column(name = "created_at")
-    private OffsetDateTime createdAt;
+	private Long id;
 
-    @Column(name = "updated_at")
-    private OffsetDateTime updatedAt;
+	@Column(name = "created_at")
+	private OffsetDateTime createdAt;
+	@JsonIgnore
+	@Column(name = "updated_at")
+	private OffsetDateTime updatedAt;
 
-	@Column(name = "created_by") 
+	@JsonIgnore
+	@Column(name = "created_by")
 	private Long createdBy;
-
-	@Column(name = "updated_by") 
+	@JsonIgnore
+	@Column(name = "updated_by")
 	private Long updatedBy;
 
 	@Override

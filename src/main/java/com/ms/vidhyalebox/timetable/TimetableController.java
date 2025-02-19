@@ -17,7 +17,7 @@ import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @Validated
 @RequestMapping("/timetable")

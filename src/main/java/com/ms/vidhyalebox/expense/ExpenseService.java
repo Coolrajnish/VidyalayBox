@@ -6,5 +6,10 @@ import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 public interface ExpenseService extends IGenericService<GenericEntity, Long> {
-	public Page<ExpenseEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder);
+	public Page<ExpenseEntity> search(String orgId, String searchText, int page, int size, String sortBy,
+			String sortOrder);
+
+	public ExpenseEntity save(ExpenseDTO dto);
+
+	public ExpenseEntity modify(ExpenseDTO eDTO);
 }

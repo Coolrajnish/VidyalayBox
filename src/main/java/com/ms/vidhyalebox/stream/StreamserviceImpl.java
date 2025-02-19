@@ -51,4 +51,11 @@ public class StreamserviceImpl extends GenericService<GenericEntity, Long> imple
 			return streamRepo.findAll(pageable);
 		}
 	}
+    
+	public StreamEntity save(StreamDTO dto) {
+    	
+    	StreamEntity entity =(StreamEntity) streamMapperNormal.dtoToEntity(dto);
+    	entity = streamRepo.save(entity);
+		return entity;
+    }
 }

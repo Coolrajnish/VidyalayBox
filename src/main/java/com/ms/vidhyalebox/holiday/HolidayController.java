@@ -6,21 +6,21 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
+import com.ms.vidhyalebox.stream.StreamEntity;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
 
-@CrossOrigin(origins = "*")
 @RestController
 @Validated
 @RequestMapping("/holiday")
@@ -48,12 +48,20 @@ public class HolidayController extends GenericController<HolidayDTO, Long> {
 				Map.of("currentPage", val.getNumber(), "totalPages", val.getTotalPages(), "totalItems",
 						val.getTotalElements())));
 	}
-	
-	@PatchMapping("/update/{id}")
-    public ResponseEntity<HolidayEntity> updateUser(@PathVariable Long id, @RequestBody HolidayDTO holidayDTO) {
+
+	@PatchMapping("/modify/{id}")
+	public ResponseEntity<HolidayEntity> updateUser(@PathVariable Long id, @RequestBody HolidayDTO holidayDTO) {
 		holidayDTO.setId(id);
-        HolidayEntity updatedUser = holidayService.updateHolidatFromDTO( holidayDTO);
-        return ResponseEntity.ok(updatedUser);
-    }
-	
+		HolidayEntity updatedUser = holidayService.updateHolidatFromDTO(holidayDTO);
+		return ResponseEntity.ok(updatedUser);
+	}
+
+	@PostMapping("/save")
+	public ResponseEntity<APiResponse<HolidayEntity>> filterStreamval(@RequestBody HolidayDTO dto) {
+
+		HolidayEntity entity = holidayService.save(dto);
+
+		return ResponseEntity.ok(new APiResponse<>("success", "Data saved successfully", entity, null));
+	}
+
 }

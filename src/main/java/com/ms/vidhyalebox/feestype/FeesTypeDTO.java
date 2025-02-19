@@ -1,4 +1,4 @@
-package com.ms.vidhyalebox.sharedapi.stream;
+package com.ms.vidhyalebox.feestype;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -11,12 +11,13 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class StreamDTO extends GenericDTO {
+public class FeesTypeDTO extends GenericDTO {
 
-    @NotEmpty(message = "Org unique ID is mandatory")
-    private String orgUniqId;
+	@NotEmpty(message = "Org unique Id is mandatory")
+	private String orgUniqId;
 
-    @NotEmpty(message = "Stream name is mandatory")
-    private String streamName;
+	private String feesName;
+
+	private String feesDescr;
 
 }

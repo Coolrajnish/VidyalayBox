@@ -11,8 +11,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.ms.vidhyalebox.user.UserServiceImpl;
+
+import io.swagger.v3.oas.models.PathItem.HttpMethod;
 
 @Configuration
 public class SecurityConfig {
@@ -53,29 +56,24 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        http
-                .csrf().disable()  // Disable CSRF for stateless API
-                .authorizeHttpRequests()
-                .requestMatchers("/auth/**").permitAll()  // Allow unauthenticated access to /auth
-                .requestMatchers("/role/**").permitAll()  // Allow unauthenticated access to /role
-                .requestMatchers("/health/**").permitAll()  // Allow unauthenticated access to /health
-                .requestMatchers("/error").permitAll()  // Allow unauthenticated access to /error
-                .requestMatchers("/v3/api-docs/**").permitAll()  // Allow Swagger API docs access
-                .requestMatchers("/swagger-ui/**").permitAll()  // Allow Swagger UI access
-                .requestMatchers("/swagger-ui.html").permitAll()  // Allow access to Swagger UI HTML page
-                .requestMatchers("/webjars/**").permitAll()  // Allow access to webjars (for Swagger UI resources)
-                .requestMatchers("/url/**").permitAll()  // Allow unauthenticated access to /url
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable()  // Disable CSRF for stateless API
+            .authorizeRequests()
+                .requestMatchers("/auth/**", "/role/**", "/health/**", "/error", "/v3/api-docs/**", 
+                                  "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/url/**")
+                    .permitAll()  // Allow public access to these endpoints
                 .anyRequest().authenticated()  // All other endpoints require authentication
-                .and()
-                .sessionManagement()
+            .and()
+            .cors()  // Enable CORS for all requests
+            .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())  // Default CORS configuration
+            .and()
+            .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Stateless session management
-                .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // Authorization filter before username/password filter
+            .and()
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // Authorization filter before username/password filter
 
         return http.build();
     }
-
 
 
     @Bean

@@ -6,6 +6,7 @@ import com.ms.vidhyalebox.salary.SalaryEntity;
 import com.ms.vidhyalebox.user.UserEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -29,6 +30,12 @@ public class StaffEntity extends GenericEntity {
 	@OneToOne
 	@JoinColumn(name = "userId", nullable = false)
 	private UserEntity user;
+	
+	@Column(name = "currentAddr")
+	private String currentAddr;
+
+	@Column(name = "permanentAddr")
+	private String permanentAddr;
 
 	@ManyToOne
 	@JoinColumn(name = "totalMonthLeave", nullable = false)

@@ -10,7 +10,7 @@ import com.ms.vidhyalebox.util.repo.GenericRepo;
 
 @Repository
 public interface ExpenseCategoryRepo extends GenericRepo<ExpenseCategoryEntity, Long> {
-	 @Query(value = "SELECT * FROM espense_category s WHERE s.org_uniq_id =:orgId  AND LOWER(s.expense_name) LIKE LOWER(CONCAT('%', :searchText, '%')) OR LOWER(s.expense_descr) LIKE LOWER(CONCAT('%', :searchText, '%'))", nativeQuery = true)
+	 @Query(value = "SELECT * FROM vidhyalebox.expense_category s WHERE s.org_uniq_id =:orgId  AND ((s.expense_name is NULL OR LOWER(s.expense_name) LIKE LOWER(CONCAT('%', :searchText, '%'))) OR (s.expense_descr IS NULL OR LOWER(s.expense_descr) LIKE LOWER(CONCAT('%', :searchText, '%'))))", nativeQuery = true)
 	    public Page<ExpenseCategoryEntity> search(@Param("orgId") String orgId,
 	                                           @Param("searchText") String searchText,
 	                                           Pageable pageable);

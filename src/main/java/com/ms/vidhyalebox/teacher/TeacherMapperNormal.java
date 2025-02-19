@@ -177,7 +177,6 @@ public class TeacherMapperNormal implements IMapperNormal {
 
 			LeaveSettingsEntity leavesettings = genericEntity != null ? entity.getLeavesettings() 
 					:  leave.getLeaveSettings(String.valueOf(school.getId())).get();
-			logger.info(salary+"----Leave ----->>>>>"+leavesettings);
 			if (salary != null) {
 				salary = salaryrepo.save(salary);
 			}

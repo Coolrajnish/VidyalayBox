@@ -3,6 +3,7 @@ package com.ms.vidhyalebox.assignment;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ms.vidhyalebox.Class.ClassEntity;
 import com.ms.vidhyalebox.assignmentstudent.StudentAssignmentEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
@@ -30,6 +31,7 @@ import lombok.ToString;
 @Table(name = "assignment")
 public class AssignmentEntity extends GenericEntity {
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "orgUniqId", nullable = false)
 	private OrgClientEntity school;
@@ -56,16 +58,20 @@ public class AssignmentEntity extends GenericEntity {
 	private String description;
 
 	@OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
-	 private List<StudentAssignmentEntity> submissions = new ArrayList<>();
+	private List<StudentAssignmentEntity> submissions = new ArrayList<>();
 
 	@ManyToOne
 	@JoinColumn(name = "session_id", nullable = false)
 	private SessionEntity session;
 
-	@Column(name = "resubmissionDays", nullable = false) 
+	@Column(name = "resubmissionDays", nullable = false)
 	private String resubmissionDays;
 
 	@Column(name = "points", nullable = false)
 	private String points;
+
+	private String fileUrl;
+
+	private String image;
 
 }

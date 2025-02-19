@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,13 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
+import com.ms.vidhyalebox.teacher.TeacherDTO;
 import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.UserEntity;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @Validated
 @RequestMapping("/student")
@@ -70,18 +73,18 @@ public class StudentController extends GenericController<StudentDTO, Long> {
         }
     }
 
-    @PostMapping(path = "/addstudent", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<APiResponse<Object>> addStudent(@RequestPart("studentDTO") StudentDTO studentDTO, @RequestParam("image") MultipartFile image) {
-
+    @PostMapping(path = "/save", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<APiResponse<Object>> save(@RequestBody StudentDTO studentDTO, @RequestPart("image") MultipartFile image) {
+    	StudentEntity entity= null ;
         try {
-			_studentService.addStudent(studentDTO, image);
+        	studentDTO.setFile(image);
+			entity =  _studentService.save(studentDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APiResponse<>(
 	                "error",
 	                "Student registered failed - "+e.getLocalizedMessage(),
-	                Map.of("stufName" , studentDTO.getFirstName(),
-	                        "stulName" , studentDTO.getLastName()),
+	               null,
 	                null
 	        ));
 		}
@@ -89,11 +92,29 @@ public class StudentController extends GenericController<StudentDTO, Long> {
         return ResponseEntity.ok(new APiResponse<>(
                 "success",
                 "Student registered successfully",
-                Map.of("stufName" , studentDTO.getFirstName(),
-                        "stulName" , studentDTO.getLastName()),
+                entity,
                 null
         ));
     }
+    
+    @PatchMapping(path = "/modify/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+	public ResponseEntity<APiResponse<Object>> modify(@PathVariable Long id, @RequestBody StudentDTO sDTO,
+			                       @RequestPart("image") MultipartFile image){
+    	StudentEntity entity = null;
+		try {
+			sDTO.setId(id);
+			entity =  _studentService.modify(sDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO Auto-generated catch block
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new APiResponse<>("error", "Data modification failed - " + e.getLocalizedMessage(), null,
+							null));
+		}
+		
+		return ResponseEntity.ok(new APiResponse<>("success", "Data modified successfully",
+				entity, null));
+	}
 
     @GetMapping("/getimage")
     public ResponseEntity<Resource> getImage(@RequestParam String userId) {

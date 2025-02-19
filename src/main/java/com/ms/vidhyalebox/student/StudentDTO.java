@@ -2,6 +2,8 @@ package com.ms.vidhyalebox.student;
 
 import javax.validation.constraints.NotEmpty;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.ms.vidhyalebox.sharedapi.ParentSignupRequestDTO;
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
 
@@ -27,7 +29,7 @@ public class StudentDTO extends GenericDTO {
     private String admissionDate;
 
     @NotEmpty(message = "Status is mandatory")
-    private boolean isActive;
+    private boolean isActive = true;
 
     @NotEmpty(message = "First Name is mandatory")
     private String firstName;
@@ -60,5 +62,7 @@ public class StudentDTO extends GenericDTO {
     private ParentSignupRequestDTO parentSignupRequestDTO;
 
     private String identity;
+    
+    private MultipartFile file;
 
 }

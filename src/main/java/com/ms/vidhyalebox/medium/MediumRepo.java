@@ -19,7 +19,7 @@ public interface MediumRepo extends GenericRepo<MediumEntity, Long> {
 //    public Page<MediumEntity> search( @Param("searchText") String searchText,
 //                                      Pageable pageable);
 
-    @Query(value = "SELECT * FROM medium p WHERE p.org_uniq_id =:orgId  AND LOWER(p.medium_name) LIKE LOWER(CONCAT('%', :searchText, '%'))", nativeQuery = true)
+    @Query(value = "SELECT * FROM medium p WHERE p.org_uniq_id =:orgId  AND (p.medium_name is NULL OR LOWER(p.medium_name) LIKE LOWER(CONCAT('%', :searchText, '%')))", nativeQuery = true)
     public Page<MediumEntity> search(@Param("orgId") String orgId,
                                            @Param("searchText") String searchText,
                                            Pageable pageable);

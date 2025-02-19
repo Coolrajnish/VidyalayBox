@@ -11,7 +11,7 @@ import com.ms.vidhyalebox.util.repo.GenericRepo;
 @Repository
 public interface ShiftRepo extends GenericRepo<ShiftEntity, Long> {	
 	
-	 @Query(value = "SELECT * FROM shift s WHERE s.org_uniq_id =:orgId  AND LOWER(s.shift_name) LIKE LOWER(CONCAT('%', :searchText, '%'))", nativeQuery = true)
+	 @Query(value = "SELECT * FROM shift s WHERE s.org_uniq_id =:orgId  AND (s.shift_name IS NULL OR LOWER(s.shift_name) LIKE LOWER(CONCAT('%', :searchText, '%')))", nativeQuery = true)
 	    public Page<ShiftEntity> search(@Param("orgId") String orgId,
 	                                           @Param("searchText") String searchText,
 	                                           Pageable pageable);

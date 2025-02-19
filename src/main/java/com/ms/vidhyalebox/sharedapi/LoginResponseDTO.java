@@ -25,6 +25,7 @@ public class LoginResponseDTO extends GenericDTO {
 //	private final String _refreshToken;
 	private final Long _userId;
 	private final Long _orgId;
+	private final String _orgUniqId;
 	private final List<String> _roles;
 	private final boolean _active;
 	private final boolean _accountNonLocked;

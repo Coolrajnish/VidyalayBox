@@ -38,7 +38,7 @@ import com.ms.vidhyalebox.user.IUserService;
 import com.ms.vidhyalebox.user.UserServiceImpl;
 import com.ms.vidhyalebox.util.FatalException;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -146,7 +146,7 @@ public class AuthController {
 				List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 						.collect(Collectors.toList());
 				return ResponseEntity.ok(new APiResponse<>("success", "User signed-in successfully",
-						new LoginResponseDTO(jwtToken, userDetails.getId(), userDetails.getOrgId(), roles,
+						new LoginResponseDTO(jwtToken, userDetails.getId(), userDetails.getOrgId(),userDetails.getOrgUniqId() ,roles,
 								userDetails.isEnabled(), userDetails.isAccountNonLocked(),
 								userDetails.isAccountNonExpired(), userDetails.isCredentialsNonExpired(),
 								_jwtTokenProvider.getExpiryDuration(), StringUtils.EMPTY),

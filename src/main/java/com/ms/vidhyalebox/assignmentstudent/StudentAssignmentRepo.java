@@ -10,7 +10,7 @@ import com.ms.vidhyalebox.util.repo.GenericRepo;
 
 @Repository
 public interface StudentAssignmentRepo extends GenericRepo<StudentAssignmentEntity, Long> {
-	@Query(value = "SELECT * FROM student_assignment s WHERE s.org_uniq_id =:orgId  AND LOWER(s.status) LIKE LOWER(CONCAT('%', :searchText, '%')) OR LOWER(s.feedback) LIKE LOWER(CONCAT('%', :searchText, '%'))", nativeQuery = true)
+	@Query(value = "SELECT * FROM student_assignment s WHERE s.org_uniq_id =:orgId  AND (s.status IS NULL OR LOWER(s.status) LIKE LOWER(CONCAT('%', :searchText, '%')) OR S.feedback IS NULL OR LOWER(s.feedback) LIKE LOWER(CONCAT('%', :searchText, '%')))", nativeQuery = true)
 	public Page<StudentAssignmentEntity> search(@Param("orgId") String orgId, @Param("searchText") String searchText,
 			Pageable pageable);
 }

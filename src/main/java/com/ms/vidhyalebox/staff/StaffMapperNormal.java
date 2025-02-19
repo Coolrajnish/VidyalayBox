@@ -1,126 +1,208 @@
 package com.ms.vidhyalebox.staff;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsRepo;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
+import com.ms.vidhyalebox.orgclient.OrgClientEntity;
+import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollRepo;
+import com.ms.vidhyalebox.salary.SalaryEntity;
 import com.ms.vidhyalebox.salary.SalaryRepo;
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.teacher.TeacherDTO;
+import com.ms.vidhyalebox.teacher.TeacherEntity;
 import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.IUserService;
+import com.ms.vidhyalebox.user.UserEntity;
 import com.ms.vidhyalebox.util.bl.IMapperNormal;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class StaffMapperNormal implements IMapperNormal {
-	private final IStaffRepo _iStaffRepo;
-	private final LeaveSettingsRepo leave;
-	private IOrgClientRepo orgClientRepo;
-	private IUserRepo userRepo;
-	private IUserService userService;
-	private final PasswordEncoder passwordEncoder;
-	private final PayrollRepo payrollRepo;
-	private final SalaryRepo salaryrepo;
-	// private SessionRepo sessionRepo;
-	// private final StaffMapperNormal _staffMapperNormal;
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(StaffMapperNormal.class);
+	
 	@Autowired
-	public StaffMapperNormal(IStaffRepo iStaffRepo, PasswordEncoder passwordEncoder, IUserService userService,
-			IOrgClientRepo orgClientRepo, LeaveSettingsRepo leave, IUserRepo userRepo, PayrollRepo payrollRepo,
-			SalaryRepo salaryrepo) {
-		this._iStaffRepo = iStaffRepo;
-		this.passwordEncoder = passwordEncoder;
-		this.leave = leave;
-		this.orgClientRepo = orgClientRepo;
-		this.userRepo = userRepo;
-		this.userService = userService;
-		// this._staffMapperNormal = staffMapperNormal;
-		// this.roleRepo = roleRepo;
-		this.payrollRepo = payrollRepo;
-		this.salaryrepo = salaryrepo;
+	IStaffRepo _iStaffRepo;
+	@Autowired
+	LeaveSettingsRepo leave;
+	@Autowired
+    IOrgClientRepo orgClientRepo;
+	@Autowired
+	IUserRepo userRepo;
+	@Autowired
+	IUserService userService;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	@Autowired
+	PayrollRepo payrollRepo;
+	@Autowired
+	SalaryRepo salaryrepo;
+
+	private static MultipartFile image;
+	
+	public static MultipartFile getImage() {
+		return image;
 	}
+
+	
 
 	@Override
-	public GenericEntity dtoToEntity(GenericDTO genericDto, GenericEntity genericEntity) {
-//        StaffEntity entity = genericEntity == null ? new StaffEntity() : (StaffEntity) genericEntity;
-//
-//        StaffDTO staffDTO = (StaffDTO) genericDto;
-//
-//        var salary = new SalaryEntity();
-//		salary.setBasicSalary(new BigDecimal(staffDTO.getSalary()));
-//		salary.setPaymentDate(LocalDate.now().plusDays(30).toString());
-//		salary.setPaymentStatus("PENDING");
-//		salary.setSchool(orgClientRepo.findByOrgUniqId(staffDTO.getSchool()).get());
-//		List<PayrollEntity> payrolls = new ArrayList<PayrollEntity>(); 
-//		for(Long id : staffDTO.getPayroll()) {
-//			payrolls.add(payrollRepo.findById(id).get());
-//		}
-//		salary.setPayrolls(payrolls);
-//		long total = Long.valueOf(staffDTO.getSalary());
-//		for (PayrollEntity pay : payrolls) {
-//			long amount = 0;
-//			if (!pay.getAmount().isEmpty()) {
-//				amount = Long.parseLong(pay.getAmount());
-//			} else {
-//				amount = (Long.parseLong(pay.getPercentage()) * Long.parseLong(staffDTO.getSalary())) / 100;
-//			}
-//
-//			if ("ALLOWANCE".equals(pay.getPayrollType())) {
-//				total += amount;
-//			} else {
-//				total -= amount;
-//			}
-//		}
-//
-//		salary.setNetSalary(BigDecimal.valueOf(total));
-//		var user = new UserEntity();
-//		user.setEmail(staffDTO.getEmail());
-//
-//		user.setFirstName(staffDTO.getFirstName());
-//		user.setLastName(staffDTO.getLastName());
-//
-//		user.setMobileNumber(staffDTO.getPhoneNo());
-//		user.setPassword(passwordEncoder.encode(staffDTO.getPhoneNo()));
-//		user.setSchool(orgClientRepo.findByOrgUniqId(staffDTO.getSchool())
-//				.orElseThrow(() -> new EntityNotFoundException("School not found")));
-//		user.setRole("ROLE_STAFF");
-//		user.setIdentityProvider(staffDTO.getIdentity());
-//		user.setImage(userService.saveImage(image, staffDTO.getSchool() + "_staff"));
-//		var userEntity = userRepo.save(user);
-//		salary.setUser(userEntity);
-//		entity.setUser(userEntity);
-//		OrgClientEntity school = orgClientRepo.findByOrgUniqId(staffDTO.getSchool()).get();
-//		entity.setSchool(school);
-//		List<LeaveSettingsEntity> leavesettings = leave.getLeaveSettings( ""+school.getId()).get();
-//		LeaveSettingsEntity leaveisactive = null;
-//		for(LeaveSettingsEntity leaveval : leavesettings) {
-//			if(leaveval.getSession().isActive()) {
-//				leaveisactive = leaveval;
-//			}
-//		}
-//		salary =  salaryrepo.save(salary);
-//		entity.setLeavesettings(leaveisactive);
-//		entity.setSalary(salary);
+	public GenericEntity dtoToEntity(GenericDTO genericDTO, GenericEntity genericEntity) {
+		StaffEntity entity = null;
+		
+		try {
+			entity = genericEntity == null ? new StaffEntity() : (StaffEntity) genericEntity;
+			StaffDTO staffDTO = (StaffDTO) genericDTO;
+			var salary = genericEntity == null ? new SalaryEntity() : entity.getSalary();
+			
+			//Null check for staff salary
+			if (staffDTO.getSalary() != null) {
+				salary.setBasicSalary(new BigDecimal(staffDTO.getSalary()));
+			}
+			
+			if (entity.getSalary().getPaymentDate() != null) {
+				salary.setPaymentDate(LocalDate.now().plusDays(30).toString());
+			}
+			
+			if (staffDTO.getStatus() != null) {
+				salary.setPaymentStatus(staffDTO.getStatus());
+			}
+			
+			// Null check for staff school
+			if (staffDTO.getSchool() != null) {
+				salary.setSchool(orgClientRepo.findByOrgUniqId(staffDTO.getSchool())
+						.orElseThrow(() -> new EntityNotFoundException("School not found")));
+			}
+			
+			List<PayrollEntity> payrolls = entity.getSalary().getPayrolls() != null ? entity.getSalary().getPayrolls()
+					: new ArrayList<>();
+			
+			if (staffDTO.getPayroll() != null) {
+				for (Long id : staffDTO.getPayroll()) {
+					PayrollEntity payroll = payrollRepo.findById(id)
+							.orElseThrow(() -> new EntityNotFoundException("Payroll not found for id " + id));
+					payrolls.add(payroll);
+				}
+			}
+			if (!payrolls.isEmpty()) {
+				salary.setPayrolls(payrolls);
+			}
+			
+			long total = (staffDTO.getSalary() != null) ? Long.valueOf(staffDTO.getSalary()) : 0;
+			if (total != 0) {
+				for (PayrollEntity pay : payrolls) {
+					long amount = 0;
+					if (pay.getAmount() != null && !pay.getAmount().isEmpty()) {
+						amount = Long.parseLong(pay.getAmount());
+					} else if (pay.getPercentage() != null && staffDTO.getSalary() != null) {
+						amount = (Long.parseLong(pay.getPercentage()) * Long.parseLong(staffDTO.getSalary())) / 100;
+					}
+					if ("ALLOWANCE".equals(pay.getPayrollType())) {
+						total += amount;
+					} else {
+						total -= amount;
+					}
+				}
+				salary.setNetSalary(BigDecimal.valueOf(total));
+			}
+			var user = genericEntity == null ? new UserEntity() : entity.getUser();
+			if (staffDTO.getEmail() != null) {
+				user.setEmail(staffDTO.getEmail());
+			}
 
-		return null;
-	}
+			if (staffDTO.getFirstName() != null) {
+				user.setFirstName(staffDTO.getFirstName());
+			}
+
+			if (staffDTO.getLastName() != null) {
+				user.setLastName(staffDTO.getLastName());
+			}
+
+			if (staffDTO.getPhoneNo() != null) {
+				user.setMobileNumber(staffDTO.getPhoneNo());
+				user.setPassword(passwordEncoder.encode(staffDTO.getPhoneNo())); // Assuming phone number is used as																			// the
+																					// password
+			}
+			
+			// Null check for school and identity provider
+				if (staffDTO.getSchool() != null) {
+					user.setSchool(orgClientRepo.findByOrgUniqId(staffDTO.getSchool())
+							.orElseThrow(() -> new EntityNotFoundException("School not found")));
+				}
+						
+				if (staffDTO.getIdentity() != null) {
+							user.setIdentityProvider(staffDTO.getIdentity());
+				}	
+				
+				//Image saving
+				if (image != null) {
+					user.setImage(userService.saveImage(image, entity.getSchool().getOrgUniqId() + "_staff"));
+				}
+				UserEntity userEntity = user;
+				if (!user.equals(entity.getUser())) {
+					userEntity = userRepo.save(user);
+				}
+				
+				salary.setUser(userEntity);
+
+				entity.setUser(userEntity);
+				
+				// Null check for school (already checked above)
+				OrgClientEntity school = orgClientRepo.findByOrgUniqId(staffDTO.getSchool())
+						.orElseThrow(() -> new EntityNotFoundException("School not found"));
+				entity.setSchool(school);
+				
+				LeaveSettingsEntity leavesettings = genericEntity != null ? entity.getLeavesettings() 
+						:  leave.getLeaveSettings(String.valueOf(school.getId())).get();
+				
+				if (salary != null) {
+					salary = salaryrepo.save(salary);
+				}
+
+				if (leavesettings != null) {
+					entity.setLeavesettings(leavesettings);
+				}
+
+				if (salary != null) {
+					entity.setSalary(salary);
+				}
+
+				if (staffDTO.getCurrentAddr() != null) {
+					entity.setCurrentAddr(staffDTO.getCurrentAddr());
+				}
+
+				if (staffDTO.getPermanentAddr() != null) {
+					entity.setPermanentAddr(staffDTO.getPermanentAddr());
+				} 
+				
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+               return entity;
+		}
 
 	@Override
 	public GenericDTO entityToDto(GenericEntity genericEntity) {
-		StaffEntity clientEntity = (StaffEntity) genericEntity;
-
-//        StaffSignupResponseDTO signupResponseDTO = new StaffSignupResponseDTO();
-//        signupResponseDTO.setName(clientEntity.getFirstName().concat(" ").concat(clientEntity.getLastName()));
-//        signupResponseDTO.setEmailAddress(clientEntity.getEmail());
-//        signupResponseDTO.setMobileNumber(clientEntity.getMobileNumber());
-//        signupResponseDTO.setIsActive(clientEntity.isActive());
-//        signupResponseDTO.setAccountNonExpired(clientEntity.isAccountNonExpired()); // If email verification logic is available, use it
-//        signupResponseDTO.setAccountNonLocked(clientEntity.isAccountNonLocked());  //If phone verification logic is available, use it
-//        signupResponseDTO.setOrgUniqId(clientEntity.getOrgUniqId());//  Set default or as per actual logic
-
-		return null;
+		StaffEntity entity = (StaffEntity) genericEntity;
+		StaffDTO staffDTO = new StaffDTO();
+		staffDTO.setId(entity.getId());
+		staffDTO.setFirstName(entity.getUser().getFirstName());
+		return staffDTO;
 	}
 }

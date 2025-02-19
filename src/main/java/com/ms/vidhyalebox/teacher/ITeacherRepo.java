@@ -21,7 +21,7 @@ import com.ms.vidhyalebox.util.repo.GenericRepo;
 
 @Repository
 public interface ITeacherRepo extends GenericRepo<TeacherEntity, Long> {
-	@Query(value = "SELECT * FROM teacher p JOIN users u on u.id = p.user_id WHERE u.org_uniq_id =:orgId  AND LOWER(u.first_name) LIKE LOWER(CONCAT(:searchText, '%') OR LOWER(u.last_name) LIKE LOWER(CONCAT( :searchText, '%') OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchText, '%')) OR LOWER(u.mobile_number) LIKE LOWER(CONCAT( :searchText, '%'))", nativeQuery = true)
+	@Query(value = "SELECT * FROM teacher p JOIN users u on u.id = p.user_id WHERE u.org_uniq_id =:orgId  AND (u.first_name IS NULL OR LOWER(u.first_name) LIKE LOWER(CONCAT(:searchText, '%'))) OR (u.lst_name is NULL OR LOWER(u.last_name) LIKE LOWER(CONCAT( :searchText, '%'))) OR (u.email is NULL OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchText, '%'))) OR (u.mobile_number IS NULL OR LOWER(u.mobile_number) LIKE LOWER(CONCAT( :searchText, '%')))", nativeQuery = true)
 	 public Page<TeacherEntity> search(@Param("orgId") String orgId,
 	          @Param("searchText") String searchText,
 	          Pageable pageable);

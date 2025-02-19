@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
+import com.ms.vidhyalebox.teacher.TeacherDTO;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
@@ -57,6 +60,26 @@ public class StaffController extends GenericController<StaffDTO, Long> {
 
 		return ResponseEntity.ok(new APiResponse<>("success", "Staff registered successfully",
 				Map.of("staff FirstName", staffDto.getFirstName(), "staff LastName", staffDto.getLastName()), null));
+	}
+	
+	@PatchMapping(path = "/modify/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+	public ResponseEntity<APiResponse<Object>> modifyStaff(@PathVariable Long id, @RequestPart("staffDTO") StaffDTO staffDTO,
+			                       @RequestParam("image") MultipartFile image){
+
+		try {
+			staffDTO.setId(id);
+			_iStaffService.modifyStaff(staffDTO, image);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO Auto-generated catch block
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new APiResponse<>("error", "Staff regestration failed - " + e.getLocalizedMessage(), Map
+							.of("staff FirstName", staffDTO.getFirstName(), "staff LastName", staffDTO.getLastName()),
+							null));
+		}
+		
+		return ResponseEntity.ok(new APiResponse<>("success", "Staff registered successfully",
+				null, null));
 	}
 	
 	   @GetMapping("/pagination")

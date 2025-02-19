@@ -51,4 +51,30 @@ public class AssignmentserviceImpl extends GenericService<GenericEntity, Long> i
 			return assignmentCRepo.findAll(pageable);
 		}
 	}
+
+	@Transactional
+	@Override
+	public AssignmentEntity save(AssignmentDTO dto) {
+
+		AssignmentEntity entity = (AssignmentEntity) assignmentCMapperNormal.dtoToEntity(dto);
+		entity = assignmentCRepo.save(entity);
+
+		return entity;
+
+	}
+
+	@Transactional
+	@Override
+	public AssignmentEntity modify(AssignmentDTO assignDTO) {
+		AssignmentEntity entity = null;
+		try {
+			entity = assignmentCRepo.findById((Long) assignDTO.getId()).get();
+			entity = (AssignmentEntity) assignmentCMapperNormal.dtoToEntity(assignDTO, entity);
+			entity = assignmentCRepo.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			// logger.error("error -->", e.getStackTrace());
+		}
+		return entity;
+	}
 }

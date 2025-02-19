@@ -1,5 +1,6 @@
 package com.ms.vidhyalebox.assignmentstudent;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ms.vidhyalebox.assignment.AssignmentEntity;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.student.StudentEntity;
@@ -21,10 +22,12 @@ import lombok.ToString;
 @Table(name = "student_assignment")
 public class StudentAssignmentEntity extends GenericEntity {
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "orgUniqId", nullable = false)
 	private OrgClientEntity school;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "assignment_id", nullable = false)
 	private AssignmentEntity assignment;
@@ -42,6 +45,7 @@ public class StudentAssignmentEntity extends GenericEntity {
 
 	private String submittedDate;
 
-	private String fileUrl;
+//	private String fileUrl;
+	private String image;
 
 }

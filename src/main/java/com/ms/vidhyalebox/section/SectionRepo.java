@@ -11,7 +11,7 @@ import com.ms.vidhyalebox.util.repo.GenericRepo;
 @Repository
 public interface SectionRepo extends GenericRepo<SectionEntity, Long> {
 
-    @Query(value = "SELECT * FROM section p WHERE p.org_uniq_id =:orgId  AND LOWER(p.section_name) LIKE LOWER(CONCAT('%', :searchText, '%'))", nativeQuery = true)
+    @Query(value = "SELECT * FROM section p WHERE p.org_uniq_id =:orgId  AND (p.section_name IS NULL OR LOWER(p.section_name) LIKE LOWER(CONCAT('%', :searchText, '%')))", nativeQuery = true)
     public Page<SectionEntity> search(@Param("orgId") String orgId,
                                       @Param("searchText") String searchText,
                                       Pageable pageable);

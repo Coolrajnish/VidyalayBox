@@ -176,6 +176,7 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 
 		try {
 			TeacherEntity entity = _iTeacherRepo.findById((Long) teacherDTO.getId()).get();
+			TeacherMapperNormal.setImage(image);
 			entity = (TeacherEntity) teacherMapper.dtoToEntity(teacherDTO, entity);
 			_iTeacherRepo.save(entity);
 		} catch (Exception e) {

@@ -33,22 +33,54 @@ public class ExpenseCategoryserviceImpl extends GenericService<GenericEntity, Lo
         return expenseCMapperNormal;
     }
 
-    @Transactional
 	@Override
 	public Page<ExpenseCategoryEntity> search(String orgId, String searchText, int page, int size, String sortBy,
 			String sortOrder) {
+		System.out.println(orgId + "--"+searchText+"--"+page+"--"+size);
 		// TODO Auto-generated method stub
-		Pageable pageable = null;
-		if(sortBy.isEmpty()) {
-			pageable = PageRequest.of(page, size);
-		}else {
-			pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc")?
-					Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());	
+		try {
+			Pageable pageable = null;
+			if(sortBy.isEmpty()) {
+				pageable = PageRequest.of(page, size);
+			}else {
+				pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc")?
+						Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());	
+			}
+			if(!orgId.isEmpty()) {
+				return expenseCRepo.search(orgId, searchText, pageable);
+			}else {
+				return expenseCRepo.findAll(pageable);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(!orgId.isEmpty()) {
-			return expenseCRepo.search(orgId, searchText, pageable);
-		}else {
-			return expenseCRepo.findAll(pageable);
+		return null;
+	}
+	
+    @Override
+    @Transactional
+    public ExpenseCategoryEntity saveExpenceCategory(ExpenseCategoryDTO dto) {
+    	
+    	ExpenseCategoryEntity entity =(ExpenseCategoryEntity) expenseCMapperNormal.dtoToEntity(dto);
+    	entity = expenseCRepo.save(entity);
+    	
+		return entity;
+    	
+    }
+    
+    @Transactional
+	@Override
+	public ExpenseCategoryEntity modify(ExpenseCategoryDTO eDTO) {
+		ExpenseCategoryEntity entity = null;
+		try {
+			entity = expenseCRepo.findById((Long) eDTO.getId()).get();
+			entity = (ExpenseCategoryEntity) expenseCMapperNormal.dtoToEntity(eDTO, entity);
+			entity =  expenseCRepo.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+		//	logger.error("error -->", e.getStackTrace());
 		}
+		return entity;
 	}
 }

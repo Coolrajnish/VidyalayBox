@@ -10,7 +10,6 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -25,33 +24,33 @@ import lombok.ToString;
 @Table(name = "class")
 public class ClassEntity extends GenericEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "orgUniqId", nullable = false)
-    private OrgClientEntity school;
+	@ManyToOne
+	@JoinColumn(name = "orgUniqId", nullable = false)
+	private OrgClientEntity school;
 
-    @Column(name = "class_name")
-    private String className;
+	@Column(name = "class_name")
+	private String className;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "medium_id")
-    private MediumEntity medium;
+	@ManyToOne
+	@JoinColumn(name = "medium_id")
+	private MediumEntity medium;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_teacher_id")
-    private TeacherEntity classTeacher;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id")
-    private SectionEntity sectionEntity;
+	@ManyToOne
+	@JoinColumn(name = "class_teacher_id")
+	private TeacherEntity classTeacher;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stream_id")
-    private StreamEntity streamEntity;
+	@ManyToOne
+	@JoinColumn(name = "section_id")
+	private SectionEntity sectionEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shift_id")
-    private ShiftEntity shiftEntity;
+	@ManyToOne
+	@JoinColumn(name = "stream_id")
+	private StreamEntity streamEntity;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+	@ManyToOne
+	@JoinColumn(name = "shift_id")
+	private ShiftEntity shiftEntity;
+
+	@Column(name = "is_active", nullable = false)
+	private boolean isActive = true;
 }

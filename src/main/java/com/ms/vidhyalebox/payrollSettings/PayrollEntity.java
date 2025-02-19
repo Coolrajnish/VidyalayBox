@@ -1,5 +1,6 @@
 package com.ms.vidhyalebox.payrollSettings;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
@@ -19,6 +20,7 @@ import lombok.ToString;
 @Table(name = "payroll")
 public class PayrollEntity extends GenericEntity {
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "orgUniqId", nullable = false)
 	private OrgClientEntity school;

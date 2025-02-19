@@ -18,31 +18,33 @@ public class ParentSignupRequestDTO extends GenericDTO {
     private String orgUniqueId;
 
   //  @NotEmpty(message = "Password is mandatory")
-    @Size(min = 8, message = "Password should have a minimum of 8 characters")
+  //  @Size(min = 8, message = "Password should have a minimum of 8 characters")
     private String password;
 
-    @NotEmpty(message = "Address is mandatory")
+  //  @NotEmpty(message = "Address is mandatory")
     private String address;
 
-    @NotEmpty(message = "Role is mandatory")
-    private String parentRole;
+   // @NotEmpty(message = "Role is mandatory")
+    private String parentRole = "ROLE_PARENT";
 
-    @NotEmpty(message = "Parent email is mandatory")
+   // @NotEmpty(message = "Parent email is mandatory")
     private String parentEmail;
 
-    @NotEmpty(message = "Parent first name is mandatory")
+    //@NotEmpty(message = "Parent first name is mandatory")
     private String parentFirstName;
 
-    @NotEmpty(message = "Parent last name is mandatory")
+   // @NotEmpty(message = "Parent last name is mandatory")
     private String parentLastName;
 
-    @NotEmpty(message = "Parent mobile is mandatory")
+   // @NotEmpty(message = "Parent mobile is mandatory")
     private String parentMobile;
 
-    @NotEmpty(message = "Parent gender is mandatory")
+ //   @NotEmpty(message = "Parent gender is mandatory")
     private String parentGender;
 
     private String parentImage;
+    
+    private String customfield1;
 
 }
 

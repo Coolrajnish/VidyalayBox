@@ -16,7 +16,7 @@ import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @Validated
 @RequestMapping("/classsubject")
@@ -44,4 +44,6 @@ public class ClassSubjectController extends GenericController<ClassSubjectDTO, L
 
         return _classSubjectService.MapClassSubject(classSubjectDTO);
     }
+    
+    
 }

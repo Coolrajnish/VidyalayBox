@@ -1,5 +1,6 @@
 package com.ms.vidhyalebox.medium;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
@@ -21,6 +22,7 @@ import lombok.ToString;
 @Table(name = "medium")
 public class MediumEntity extends GenericEntity {
 
+	@JsonIgnore
     @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
     @JoinColumn(name = "orgUniqId", nullable = false)
     private OrgClientEntity school;

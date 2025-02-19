@@ -1,7 +1,5 @@
 package com.ms.vidhyalebox.parent;
 
-import java.util.Optional;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +13,8 @@ import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.UserEntity;
 import com.ms.vidhyalebox.util.bl.IMapperNormal;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ParentMapperNormal implements IMapperNormal {
@@ -37,26 +37,55 @@ public class ParentMapperNormal implements IMapperNormal {
         ParentEntity entity = genericEntity == null ? new ParentEntity() : (ParentEntity) genericEntity;
         ParentSignupRequestDTO parentDTO = (ParentSignupRequestDTO) genericDto;
 
-        OrgClientEntity org = orgClientRepository.findByOrgUniqId(parentDTO.getOrgUniqueId()).get();
-        Optional<UserEntity> users = userRepo.findByEmailOrMobileNumber(null, parentDTO.getParentMobile());
-        UserEntity userEntity ;
-        if(!users.isPresent()) {
-            UserEntity user = new UserEntity();
-            user.setAddress(parentDTO.getAddress());
-            user.setEmail(parentDTO.getParentEmail());
-            user.setFirstName(parentDTO.getParentFirstName());
-            user.setLastName(parentDTO.getParentLastName());
-            user.setMobileNumber(parentDTO.getParentMobile());
-            user.setPassword(passwordEncoder.encode(parentDTO.getParentMobile()));  //As of now mobile is the password for parent
-            user.setSchool(org);
-            user.setRole("ROLE_PARENT");
-            userEntity = userRepo.save(user);
-        } else {
-            userEntity =  users.get();
+        OrgClientEntity org = orgClientRepository.findByOrgUniqId(parentDTO.getOrgUniqueId())
+                .orElseThrow(() -> new EntityNotFoundException("Organization not found"));
+        UserEntity users  = genericEntity == null ? new UserEntity() : entity.getUser();
+        if( parentDTO.getParentMobile() != null) {
+        	 users = userRepo.findByEmailOrMobileNumber(null, parentDTO.getParentMobile()).get();
         }
-        entity.setCustomfield1("test");
-        entity.setUser(userEntity);
-        entity.setSchool(org);
+       
+
+        if (users != null) {
+            UserEntity user = users;
+            
+            // Add null checks for partial updates
+            if (parentDTO.getAddress() != null) {
+                user.setAddress(parentDTO.getAddress());
+            }
+            if (parentDTO.getParentEmail() != null) {
+                user.setEmail(parentDTO.getParentEmail());
+            }
+            if (parentDTO.getParentFirstName() != null) {
+                user.setFirstName(parentDTO.getParentFirstName());
+            }
+            if (parentDTO.getParentLastName() != null) {
+                user.setLastName(parentDTO.getParentLastName());
+            }
+            if (parentDTO.getParentMobile() != null) {
+                user.setMobileNumber(parentDTO.getParentMobile());
+                user.setPassword(passwordEncoder.encode(parentDTO.getParentMobile()));  // Mobile as password
+            }
+            if (org != null) {
+                user.setSchool(org);
+            }
+            if(parentDTO.getParentRole() != null) {
+            	 user.setRole(parentDTO.getParentRole());
+            }
+           
+
+            users = userRepo.save(user);
+        } 
+
+        // Setting custom fields and associated entities
+        if(entity.getCustomfield1() != null) {
+        	 entity.setCustomfield1(parentDTO.getCustomfield1());
+        }
+       
+        entity.setUser(users);
+        if (org != null) {
+            entity.setSchool(org);
+        }
+
         return entity;
     }
 

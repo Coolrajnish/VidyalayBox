@@ -7,4 +7,6 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 public interface ShiftService extends IGenericService<GenericEntity, Long> {
 	public Page<ShiftEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder);
+	 public ShiftEntity save(ShiftDTO dto);
+	 public ShiftEntity modify(ShiftDTO shiftDTO);
 }

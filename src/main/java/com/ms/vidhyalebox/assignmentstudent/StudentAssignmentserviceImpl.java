@@ -53,4 +53,29 @@ public class StudentAssignmentserviceImpl extends GenericService<GenericEntity, 
 			return studentAssignmentCRepo.findAll(pageable);
 		}
 	}
+
+	@Transactional
+	@Override
+	public StudentAssignmentEntity save(StudentAssignmentDTO dto) {
+
+		StudentAssignmentEntity entity = (StudentAssignmentEntity) studentAssignmentCMapperNormal.dtoToEntity(dto);
+		entity = studentAssignmentCRepo.save(entity);
+
+		return entity;
+	}
+
+	@Transactional
+	@Override
+	public StudentAssignmentEntity modify(StudentAssignmentDTO saDTO) {
+		StudentAssignmentEntity entity = null;
+		try {
+			entity = studentAssignmentCRepo.findById((Long) saDTO.getId()).get();
+			entity = (StudentAssignmentEntity) studentAssignmentCMapperNormal.dtoToEntity(saDTO, entity);
+			entity = studentAssignmentCRepo.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			// logger.error("error -->", e.getStackTrace());
+		}
+		return entity;
+	}
 }

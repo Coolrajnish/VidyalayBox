@@ -21,6 +21,8 @@ import com.ms.vidhyalebox.parent.ParentEntity;
 import com.ms.vidhyalebox.parent.ParentMapperNormal;
 import com.ms.vidhyalebox.session.SessionRepo;
 import com.ms.vidhyalebox.sharedapi.ParentSignupRequestDTO;
+import com.ms.vidhyalebox.teacher.TeacherEntity;
+import com.ms.vidhyalebox.teacher.TeacherMapperNormal;
 import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.IUserService;
 import com.ms.vidhyalebox.user.UserEntity;
@@ -84,54 +86,37 @@ public class StudentServiceImpl extends GenericService<GenericEntity, Long> impl
 
 	@Transactional
 	@Override
-	public String addStudent(StudentDTO studentDTO, MultipartFile image) {
-		if (userRepo.existsByIdentityProvider(studentDTO.getIdentity())) {
-			throw new InvalidItemException("Please contact support, student identity already exists.");
+	public StudentEntity save(StudentDTO studentDTO) {
+		StudentEntity entity = null;
+		try {
+			// entity = studentRepo.findById((Long) studentDTO.getId()).get();
+			entity = (StudentEntity) studentMapperNormal.dtoToEntity(studentDTO, null);
+			studentRepo.save(entity);
+		} catch (Exception e) {
+			e.getStackTrace();
+			// TODO Auto-generated catch block
+		//	logger.error("error -->", e.getStackTrace());
 		}
 
-		// Retaining casting for ParentEntity
-		ParentSignupRequestDTO parentSignupRequestDTO = studentDTO.getParentSignupRequestDTO();
-		ParentEntity parent = (ParentEntity) parentMapper.dtoToEntity(parentSignupRequestDTO); // Retained cast
-		parent = parentRepo.save(parent);
-
-		var user = new UserEntity();
-		user.setAddress(studentDTO.getCurrentAddr());
-		user.setEmail(
-				Optional.ofNullable(studentDTO.getStudentEmail()).orElse(parentSignupRequestDTO.getParentEmail()));
-		user.setFirstName(studentDTO.getFirstName());
-		user.setLastName(studentDTO.getLastName());
-		user.setMobileNumber(studentDTO.getStudentMobile());
-		user.setPassword(encode.encode(
-				Optional.ofNullable(studentDTO.getStudentPWD()).orElse(parentSignupRequestDTO.getParentMobile())));
-		user.setSchool(orgClientRepo.findByOrgUniqId(studentDTO.getOrgUniqId())
-				.orElseThrow(() -> new EntityNotFoundException("School not found")));
-		user.setRole("ROLE_STUDENT");
-		user.setIdentityProvider(studentDTO.getIdentity());
-		user.setImage(userService.saveImage(image, studentDTO.getOrgUniqId() + "_student"));
-
-		var userEntity = userRepo.save(user);
-
-		// Retaining casting for StudentEntity
-		var entity = new StudentEntity();
-		entity.setBloodGroup(studentDTO.getBloodgroup());
-		entity.setEmergencyContact(studentDTO.getEmergencyContact());
-		entity.setActive(studentDTO.isActive());
-		entity.setClassEntity(classRepo.findById(Long.valueOf(studentDTO.getClassSection()))
-				.orElseThrow(() -> new EntityNotFoundException("Class not found")));
-		entity.setParentEntity(parent);
-		entity.setUser(userEntity);
-		entity.setSessionEntity(sessionRepo.findById(Long.valueOf(studentDTO.getSessionYear()))
-				.orElseThrow(() -> new EntityNotFoundException("Session not found")));
-		entity.setSchool(orgClientRepo.findByOrgUniqId(studentDTO.getOrgUniqId())
-				.orElseThrow(() -> new EntityNotFoundException("School not found")));
-		entity.setAdmissionDate(studentDTO.getAdmissionDate());
-		entity.setPermanentAddress(studentDTO.getPermanentAddr());
-
-		studentRepo.save(entity);
-
-		return "Student added";
+		return entity;
 	}
 
+	@Transactional
+	@Override
+	public StudentEntity modify(StudentDTO sDTO) {
+		StudentEntity entity = null ;
+		try {
+			 entity = studentRepo.findById((Long) sDTO.getId()).get();
+			entity = (StudentEntity) studentMapperNormal.dtoToEntity(sDTO, entity);
+			studentRepo.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.getStackTrace();
+		//	logger.error("error -->", e.getStackTrace());
+		}
+
+		return entity;
+	} 
 	@Transactional
 	@Override
 	public Page<StudentEntity> search(String orgId, String searchText, int page, int size, String sortBy,

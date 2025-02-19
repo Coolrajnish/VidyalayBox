@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,9 @@ import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollRepo;
 import com.ms.vidhyalebox.salary.SalaryEntity;
 import com.ms.vidhyalebox.salary.SalaryRepo;
+import com.ms.vidhyalebox.teacher.TeacherDTO;
+import com.ms.vidhyalebox.teacher.TeacherEntity;
+import com.ms.vidhyalebox.teacher.TeacherServiceImpl;
 import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.IUserService;
 import com.ms.vidhyalebox.user.UserEntity;
@@ -36,6 +41,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class StaffServiceImpl extends GenericService<GenericEntity, Long> implements IStaffService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StaffServiceImpl.class);
 
 	private final IStaffRepo _iStaffRepo;
 	private final LeaveSettingsRepo leave;
@@ -45,9 +52,7 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 	private final PasswordEncoder passwordEncoder;
 	private final PayrollRepo payrollRepo;
 	private final SalaryRepo salaryrepo;
-	//private SessionRepo sessionRepo;
-	private final StaffMapperNormal _staffMapperNormal;
-	//private final RoleRepo roleRepo;
+	private final StaffMapperNormal _staffMapper;
 
 	@Autowired
 	public StaffServiceImpl( StaffMapperNormal _staffMapperNormal,IStaffRepo iStaffRepo, PasswordEncoder passwordEncoder,
@@ -59,11 +64,9 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 		this.orgClientRepo = orgClientRepo;
 		this.userRepo = userRepo;
 		this.userService = userService;
-		//this._staffMapperNormal = staffMapperNormal;
-		//this.roleRepo = roleRepo;
 		this.payrollRepo = payrollRepo;
 		this.salaryrepo = salaryrepo;
-		this._staffMapperNormal = _staffMapperNormal;
+		this._staffMapper = _staffMapperNormal;
 	}
 
 	@Transactional
@@ -122,16 +125,12 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 			entity.setUser(userEntity);
 			OrgClientEntity school = orgClientRepo.findByOrgUniqId(staffDTO.getSchool()).get();
 			entity.setSchool(school);
-			List<LeaveSettingsEntity> leavesettings = leave.getLeaveSettings( ""+school.getId()).get();
-			LeaveSettingsEntity leaveisactive = null;
-			for(LeaveSettingsEntity leaveval : leavesettings) {
-				if(leaveval.getSession().isActive()) {
-					leaveisactive = leaveval;
-				}
-			}
+			LeaveSettingsEntity leavesettings = leave.getLeaveSettings(String.valueOf(school.getId())).get();
 			salary =  salaryrepo.save(salary);
-			entity.setLeavesettings(leaveisactive);
+			entity.setLeavesettings(leavesettings);
 			entity.setSalary(salary);
+			entity.setCurrentAddr(staffDTO.getCurrentAddr());
+			entity.setPermanentAddr(staffDTO.getPermanentAddr());
 			_iStaffRepo.save(entity);
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -141,19 +140,34 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 			e.printStackTrace();
 		}
 
-		return "Student added";
+		return "Staff added";
+	}
+	@Transactional
+	@Override
+	public String modifyStaff(StaffDTO staffDTO, MultipartFile image) {
+
+		try {
+			StaffEntity entity = _iStaffRepo.findById((Long) staffDTO.getId()).get();
+			entity = (StaffEntity) _staffMapper.dtoToEntity(staffDTO, entity);
+			_iStaffRepo.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("error -->", e.getStackTrace());
+		}
+
+		return null;
 	}
 
 	@Override
-	public JpaRepository getRepo() {
+	public JpaRepository <GenericEntity, Object> getRepo() {
 		// TODO Auto-generated method stub
-		return _iStaffRepo;
+		return null;
 	}
 
 	@Override
 	public IMapperNormal getMapper() {
 		// TODO Auto-generated method stub
-		return  _staffMapperNormal;
+		return  _staffMapper;
 	}
 	
     @Transactional

@@ -10,7 +10,7 @@ import com.ms.vidhyalebox.util.repo.GenericRepo;
 
 @Repository
 public interface StreamRepo extends GenericRepo<StreamEntity, Long> {
-	 @Query(value = "SELECT * FROM stream s WHERE s.org_uniq_id =:orgId  AND LOWER(s.stream_name) LIKE LOWER(CONCAT('%', :searchText, '%'))", nativeQuery = true)
+	 @Query(value = "SELECT * FROM stream s WHERE s.org_uniq_id =:orgId  AND (s.stream_name IS NULL OR LOWER(s.stream_name) LIKE LOWER(CONCAT('%', :searchText, '%')))", nativeQuery = true)
 	    public Page<StreamEntity> search(@Param("orgId") String orgId,
 	                                           @Param("searchText") String searchText,
 	                                           Pageable pageable);

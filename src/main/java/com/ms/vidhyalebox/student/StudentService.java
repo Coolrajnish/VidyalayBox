@@ -11,6 +11,7 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 public interface StudentService extends IGenericService<GenericEntity, Long> {
 
     public boolean transferStudent(List<StudentTransferDTO> studentTransferDTO);
-    public String addStudent(StudentDTO studentDTO, MultipartFile image);
     public Page<StudentEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder);
+	public StudentEntity save(StudentDTO studentDTO);
+	public StudentEntity modify(StudentDTO sDTO);
 }

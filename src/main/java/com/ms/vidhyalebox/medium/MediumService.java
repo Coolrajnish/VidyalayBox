@@ -7,6 +7,9 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 public interface MediumService extends IGenericService<GenericEntity, Long> {
 
-    public Page<MediumEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder);
+	public Page<MediumEntity> search(String orgId, String searchText, int page, int size, String sortBy,
+			String sortOrder);
 
+	public MediumEntity save(MediumDTO dto);
+	public MediumEntity modify(MediumDTO dto);
 }

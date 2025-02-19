@@ -13,44 +13,66 @@ import com.ms.vidhyalebox.util.bl.IMapperNormal;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 
 @Service
-public class ShiftServiceImpl extends GenericService<GenericEntity, Long> implements ShiftService{
+public class ShiftServiceImpl extends GenericService<GenericEntity, Long> implements ShiftService {
 
-    private final ShiftMapperNormal shiftMapperNormal;
+	private final ShiftMapperNormal shiftMapperNormal;
+	private final ShiftRepo shiftRepo;
 
-    public ShiftServiceImpl(ShiftMapperNormal shiftMapperNormal, ShiftRepo shiftRepo) {
-        this.shiftMapperNormal = shiftMapperNormal;
-        this.shiftRepo = shiftRepo;
-    }
+	public ShiftServiceImpl(ShiftMapperNormal shiftMapperNormal, ShiftRepo shiftRepo) {
+		this.shiftMapperNormal = shiftMapperNormal;
+		this.shiftRepo = shiftRepo;
+	}
 
-    private final ShiftRepo shiftRepo;
+	@Override
+	public JpaRepository getRepo() {
+		return shiftRepo;
+	}
 
-    @Override
-    public JpaRepository getRepo() {
-        return shiftRepo;
-    }
+	@Override
+	public IMapperNormal getMapper() {
+		return shiftMapperNormal;
+	}
 
-    @Override
-    public IMapperNormal getMapper() {
-        return shiftMapperNormal;
-    }
-
-    @Transactional
+	@Transactional
 	@Override
 	public Page<ShiftEntity> search(String orgId, String searchText, int page, int size, String sortBy,
 			String sortOrder) {
 		Pageable pageable = null;
-		if(sortBy.isEmpty()) {
+		if (sortBy.isEmpty()) {
 			pageable = PageRequest.of(page, size);
-		}else {
-			pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc")?
-					Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());				
+		} else {
+			pageable = PageRequest.of(page, size,
+					sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 		}
-		if(!orgId.isEmpty()) {
+		if (!orgId.isEmpty()) {
 			return shiftRepo.search(orgId, searchText, pageable);
-		}else {
+		} else {
 			return shiftRepo.findAll(pageable);
 		}
-		
+
+	}
+
+	public ShiftEntity save(ShiftDTO dto) {
+
+		ShiftEntity entity = (ShiftEntity) shiftMapperNormal.dtoToEntity(dto);
+		entity = shiftRepo.save(entity);
+
+		return entity;
+
+	}
 	
+	@Transactional
+	@Override
+	public ShiftEntity modify(ShiftDTO shiftDTO) {
+		ShiftEntity entity = null;
+		try {
+			entity = shiftRepo.findById((Long) shiftDTO.getId()).get();
+			entity = (ShiftEntity) shiftMapperNormal.dtoToEntity(shiftDTO, entity);
+			entity =  shiftRepo.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+		//	logger.error("error -->", e.getStackTrace());
+		}
+		return entity;
 	}
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/role")
 public class RoleController {

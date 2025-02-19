@@ -8,4 +8,8 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 public interface StudentAssignmentService extends IGenericService<GenericEntity, Long> {
 	public Page<StudentAssignmentEntity> search(String orgId, String searchText, int page, int size, String sortBy,
 			String sortOrder);
+
+	public StudentAssignmentEntity save(StudentAssignmentDTO dto);
+
+	public StudentAssignmentEntity modify(StudentAssignmentDTO saDTO);
 }

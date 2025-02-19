@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,13 +19,13 @@ import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @Validated
 @RequestMapping("/stream")
 public class StreamController extends GenericController<StreamDTO, Long> {
 
-    private final  StreamserviceImpl _streamService;
+    private final  StreamService _streamService;
 
     public StreamController(StreamserviceImpl streamService) {
         _streamService = streamService;
@@ -52,5 +54,18 @@ public class StreamController extends GenericController<StreamDTO, Long> {
                                 "totalPages", val.getTotalPages(),
                                 "totalItems", val.getTotalElements()
                                 )));
+    }
+    
+    @PostMapping("/save")
+    public ResponseEntity<APiResponse<StreamEntity>> filterStreamval(@RequestBody StreamDTO dto){
+
+    	 StreamEntity entity = _streamService.save(dto);
+    	 
+   	 return ResponseEntity.ok(
+   			 new APiResponse<>(
+                        "success" ,
+                        "Data saved successfully" ,
+                        entity,
+                        null));
     }
 }

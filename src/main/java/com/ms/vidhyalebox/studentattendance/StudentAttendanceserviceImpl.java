@@ -14,41 +14,52 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 import jakarta.transaction.Transactional;
 
 @Service
-public class StudentAttendanceserviceImpl extends GenericService<GenericEntity, Long> implements StudentAttendanceService {
+public class StudentAttendanceserviceImpl extends GenericService<GenericEntity, Long>
+		implements StudentAttendanceService {
 
-    private final StudentAttendanceRepo expenseCRepo;
-    private final StudentAttendanceMapperNormal  expenseCMapperNormal;
+	private final StudentAttendanceRepo attendanceRepo;
+	private final StudentAttendanceMapperNormal attendanceMapperNormal;
 
-    public StudentAttendanceserviceImpl(StudentAttendanceRepo expenseCRepo, StudentAttendanceMapperNormal expenseCMapperNormal) {
-        this.expenseCRepo = expenseCRepo;
-        this.expenseCMapperNormal = expenseCMapperNormal;
-    }
+	public StudentAttendanceserviceImpl(StudentAttendanceRepo attendanceRepo,
+			StudentAttendanceMapperNormal attendanceMapperNormal) {
+		this.attendanceRepo = attendanceRepo;
+		this.attendanceMapperNormal = attendanceMapperNormal;
+	}
 
-    @Override
-    public JpaRepository getRepo() {
-        return expenseCRepo;
-    }
+	@Override
+	public JpaRepository getRepo() {
+		return attendanceRepo;
+	}
 
-    @Override
-    public IMapperNormal getMapper() {
-        return expenseCMapperNormal;
-    }
+	@Override
+	public IMapperNormal getMapper() {
+		return attendanceMapperNormal;
+	}
 
-    @Transactional
+	@Transactional
 	@Override
 	public Page<StudentAttendanceEntity> search(String orgId, String searchText, int page, int size, String sortBy,
 			String sortOrder) {
 		Pageable pageable = null;
-		if(sortBy.isEmpty()) {
+		if (sortBy.isEmpty()) {
 			pageable = PageRequest.of(page, size);
-		}else {
-			pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc")?
-					Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());	
+		} else {
+			pageable = PageRequest.of(page, size,
+					sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 		}
-		if(!orgId.isEmpty()) {
-			return expenseCRepo.search(orgId, searchText, pageable);
-		}else {
-			return expenseCRepo.findAll(pageable);
+		if (!orgId.isEmpty()) {
+			return attendanceRepo.search(orgId, searchText, pageable);
+		} else {
+			return attendanceRepo.findAll(pageable);
 		}
+	}
+
+	@Override
+	public StudentAttendanceEntity save(StudentAttendanceDTO dto) {
+		StudentAttendanceEntity entity = (StudentAttendanceEntity) attendanceMapperNormal.dtoToEntity(dto);
+		entity = attendanceRepo.save(entity);
+
+		return entity;
+
 	}
 }

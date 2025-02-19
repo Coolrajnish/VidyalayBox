@@ -16,12 +16,12 @@ import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
 
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @Validated
 @RequestMapping("/teacher")
 public class TeacherController extends GenericController<TeacherDTO, Long> {
-//
+
 	private final TeacherServiceImpl _iTeacherService;
 	
 	public TeacherController(final TeacherServiceImpl teacherservice) {
@@ -44,12 +44,12 @@ public class TeacherController extends GenericController<TeacherDTO, Long> {
 			e.printStackTrace();
 			// TODO Auto-generated catch block
 			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new APiResponse<>("error", "Teacher regestration failed - " + e.getLocalizedMessage(), Map
+					.body(new APiResponse<>("error", "Data save failed - " + e.getLocalizedMessage(), Map
 							.of("teacher FirstName", teacherDTO.getFirstName(), "teacher LastName", teacherDTO.getLastName()),
 							null));
 		}
 		
-		return ResponseEntity.ok(new APiResponse<>("success", "Teacher registered successfully",
+		return ResponseEntity.ok(new APiResponse<>("success", "Data saved successfully",
 				Map.of("teacher FirstName", teacherDTO.getFirstName(), "teacher LastName", teacherDTO.getLastName()), null));
 	}
 	
@@ -64,12 +64,12 @@ public class TeacherController extends GenericController<TeacherDTO, Long> {
 			e.printStackTrace();
 			// TODO Auto-generated catch block
 			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new APiResponse<>("error", "Teacher regestration failed - " + e.getLocalizedMessage(), Map
+					.body(new APiResponse<>("error", "Data modification failed - " + e.getLocalizedMessage(), Map
 							.of("teacher FirstName", teacherDTO.getFirstName(), "teacher LastName", teacherDTO.getLastName()),
 							null));
 		}
 		
-		return ResponseEntity.ok(new APiResponse<>("success", "Teacher registered successfully",
+		return ResponseEntity.ok(new APiResponse<>("success", "Data modified successfully",
 				null, null));
 	}
 	

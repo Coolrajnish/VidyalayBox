@@ -62,9 +62,18 @@ public class HolidayserviceImpl extends GenericService<GenericEntity, Long> impl
 	@Transactional
 	@Override
 	public HolidayEntity updateHolidatFromDTO(HolidayDTO holidayDTO) {
-		HolidayEntity holiday = holidayRepo.findById( (Long) holidayDTO.getId()).get();
+		HolidayEntity holiday = holidayRepo.findById((Long) holidayDTO.getId()).get();
 		holiday = (HolidayEntity) holidayMapperNormal.dtoToEntity(holidayDTO, holiday);
 		holidayRepo.save(holiday);
 		return holiday;
 	}
+
+	@Override
+	public HolidayEntity save(HolidayDTO dto) {
+		HolidayEntity entity = (HolidayEntity) holidayMapperNormal.dtoToEntity(dto);
+		entity = holidayRepo.save(entity);
+
+		return entity;
+	}
+
 }
