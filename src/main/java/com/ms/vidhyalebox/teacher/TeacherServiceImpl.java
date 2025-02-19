@@ -1,5 +1,20 @@
 package com.ms.vidhyalebox.teacher;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+//
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 //
 //import com.ms.shared.api.auth.SignupRequestDTO;
 //import com.ms.shared.api.auth.TeacherSignupRequestDTO;
@@ -22,35 +37,18 @@ package com.ms.vidhyalebox.teacher;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-//
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ms.vidhyalebox.auth.AuthController;
-import com.ms.vidhyalebox.holiday.HolidayEntity;
-import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsEResp;
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsRepo;
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsserviceImpl;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollRepo;
 import com.ms.vidhyalebox.salary.SalaryEntity;
 import com.ms.vidhyalebox.salary.SalaryRepo;
-import com.ms.vidhyalebox.staff.StaffEntity;
+import com.ms.vidhyalebox.staff.StaffServiceImpl;
 import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.IUserService;
 import com.ms.vidhyalebox.user.UserEntity;
@@ -76,6 +74,8 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 	private final SalaryRepo salaryrepo;
 	private final TeacherMapperNormal teacherMapper;
 
+	@Autowired
+	LeaveSettingsserviceImpl leaves;
 	@Autowired
 	public TeacherServiceImpl(TeacherMapperNormal teacherMapper, ITeacherRepo iTeacherRepo,
 			PasswordEncoder passwordEncoder, IUserService userService, IOrgClientRepo orgClientRepo,
@@ -150,9 +150,12 @@ public class TeacherServiceImpl extends GenericService<GenericEntity, Long> impl
 			entity.setUser(userEntity);
 			OrgClientEntity school = orgClientRepo.findByOrgUniqId(teacherDTO.getSchool()).get();
 			entity.setSchool(school);
-			LeaveSettingsEntity leavesettings = leave.getLeaveSettings(String.valueOf(school.getId())).get();
+			// LeaveSettingsEntity leavesettings =
+			// leave.getLeaveSettings(String.valueOf(school.getId())).get();
+			LeaveSettingsEResp leavesettings = leaves.getLeaveSettings(school.getId().toString());
+
 			salary = salaryrepo.save(salary);
-			entity.setLeavesettings(leavesettings);
+			entity.setLeavesettings(leave.findById(leavesettings.getId()).get());
 			salary = salaryrepo.save(salary);
 			entity.setSalary(salary);
 			entity.setQualification(teacherDTO.getQualification());

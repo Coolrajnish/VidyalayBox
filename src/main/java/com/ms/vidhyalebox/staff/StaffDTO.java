@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
 
 import lombok.Data;
@@ -54,6 +56,6 @@ public class StaffDTO extends GenericDTO {
 
 	private List<Long> payroll;
 	
-	
+	private MultipartFile file;
 
 }

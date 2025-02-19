@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +19,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsEResp;
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsRepo;
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsserviceImpl;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollRepo;
 import com.ms.vidhyalebox.salary.SalaryEntity;
 import com.ms.vidhyalebox.salary.SalaryRepo;
-import com.ms.vidhyalebox.teacher.TeacherDTO;
-import com.ms.vidhyalebox.teacher.TeacherEntity;
-import com.ms.vidhyalebox.teacher.TeacherServiceImpl;
 import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.IUserService;
 import com.ms.vidhyalebox.user.UserEntity;
@@ -36,12 +35,13 @@ import com.ms.vidhyalebox.util.bl.GenericService;
 import com.ms.vidhyalebox.util.bl.IMapperNormal;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.InvalidItemException;
+import com.ms.vidhyalebox.util.rest.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class StaffServiceImpl extends GenericService<GenericEntity, Long> implements IStaffService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(StaffServiceImpl.class);
 
 	private final IStaffRepo _iStaffRepo;
@@ -53,11 +53,13 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 	private final PayrollRepo payrollRepo;
 	private final SalaryRepo salaryrepo;
 	private final StaffMapperNormal _staffMapper;
-
 	@Autowired
-	public StaffServiceImpl( StaffMapperNormal _staffMapperNormal,IStaffRepo iStaffRepo, PasswordEncoder passwordEncoder,
-			 IUserService userService, IOrgClientRepo orgClientRepo,
-			 LeaveSettingsRepo leave, IUserRepo userRepo, PayrollRepo payrollRepo, SalaryRepo salaryrepo) {
+	LeaveSettingsserviceImpl leaves;
+	
+	@Autowired
+	public StaffServiceImpl(StaffMapperNormal _staffMapperNormal, IStaffRepo iStaffRepo,
+			PasswordEncoder passwordEncoder, IUserService userService, IOrgClientRepo orgClientRepo,
+			LeaveSettingsRepo leave, IUserRepo userRepo, PayrollRepo payrollRepo, SalaryRepo salaryrepo) {
 		this._iStaffRepo = iStaffRepo;
 		this.passwordEncoder = passwordEncoder;
 		this.leave = leave;
@@ -82,8 +84,8 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 			salary.setPaymentDate(LocalDate.now().plusDays(30).toString());
 			salary.setPaymentStatus("PENDING");
 			salary.setSchool(orgClientRepo.findByOrgUniqId(staffDTO.getSchool()).get());
-			List<PayrollEntity> payrolls = new ArrayList<PayrollEntity>(); 
-			for(Long id : staffDTO.getPayroll()) {
+			List<PayrollEntity> payrolls = new ArrayList<PayrollEntity>();
+			for (Long id : staffDTO.getPayroll()) {
 				payrolls.add(payrollRepo.findById(id).get());
 			}
 			salary.setPayrolls(payrolls);
@@ -125,9 +127,9 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 			entity.setUser(userEntity);
 			OrgClientEntity school = orgClientRepo.findByOrgUniqId(staffDTO.getSchool()).get();
 			entity.setSchool(school);
-			LeaveSettingsEntity leavesettings = leave.getLeaveSettings(String.valueOf(school.getId())).get();
-			salary =  salaryrepo.save(salary);
-			entity.setLeavesettings(leavesettings);
+			LeaveSettingsEResp leavesettings = leaves.getLeaveSettings(school.getId().toString());
+			salary = salaryrepo.save(salary);
+			entity.setLeavesettings(leave.findById(leavesettings.getId()).get());
 			entity.setSalary(salary);
 			entity.setCurrentAddr(staffDTO.getCurrentAddr());
 			entity.setPermanentAddr(staffDTO.getPermanentAddr());
@@ -142,11 +144,13 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 
 		return "Staff added";
 	}
+
 	@Transactional
 	@Override
 	public String modifyStaff(StaffDTO staffDTO, MultipartFile image) {
 
 		try {
+			staffDTO.setFile(image);
 			StaffEntity entity = _iStaffRepo.findById((Long) staffDTO.getId()).get();
 			entity = (StaffEntity) _staffMapper.dtoToEntity(staffDTO, entity);
 			_iStaffRepo.save(entity);
@@ -159,7 +163,7 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 	}
 
 	@Override
-	public JpaRepository <GenericEntity, Object> getRepo() {
+	public JpaRepository<GenericEntity, Object> getRepo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -167,24 +171,25 @@ public class StaffServiceImpl extends GenericService<GenericEntity, Long> implem
 	@Override
 	public IMapperNormal getMapper() {
 		// TODO Auto-generated method stub
-		return  _staffMapper;
+		return _staffMapper;
 	}
-	
-    @Transactional
-    @Override
-    public Page<StaffEntity> search(String orgId, String searchText, int page, int size, String sortBy, String sortOrder) {
-        Pageable pageable = null;
-        if(sortBy.isEmpty()){
-             pageable = PageRequest.of(page, size);
-        } else {
-             pageable = PageRequest.of(page, size, sortOrder.equalsIgnoreCase("desc") ?
-                    Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
-        }
-        if(!orgId.isEmpty() ){
-            return _iStaffRepo.search(orgId, searchText, pageable);
-        } else {
-            return _iStaffRepo.findAll(pageable);
-        }
-    }
+
+	@Transactional
+	@Override
+	public Page<StaffEntity> search(String orgId, String searchText, int page, int size, String sortBy,
+			String sortOrder) {
+		Pageable pageable = null;
+		if (sortBy.isEmpty()) {
+			pageable = PageRequest.of(page, size);
+		} else {
+			pageable = PageRequest.of(page, size,
+					sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+		}
+		if (!orgId.isEmpty()) {
+			return _iStaffRepo.search(orgId, searchText, pageable);
+		} else {
+			return _iStaffRepo.findAll(pageable);
+		}
+	}
 
 }

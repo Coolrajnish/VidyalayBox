@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,7 +54,7 @@ public class AssignmentController extends GenericController<AssignmentDTO, Long>
 
 	@PostMapping(path = "/save", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	public ResponseEntity<APiResponse<AssignmentEntity>> filterStreamval(@RequestBody AssignmentDTO dto,
-			@RequestParam("image") List<MultipartFile> images) {
+			@RequestPart("images") List<MultipartFile> images) {
 		dto.setFiles(images);
 		AssignmentEntity entity = _assignmentService.save(dto);
 
@@ -61,16 +62,18 @@ public class AssignmentController extends GenericController<AssignmentDTO, Long>
 	}
 
 	@PatchMapping(path = "/modify/{id}")
-	public ResponseEntity<APiResponse<Object>> modify(@PathVariable Long id, @RequestBody AssignmentDTO assignmentDTO) {
+	public ResponseEntity<APiResponse<Object>> modify(@PathVariable Long id, @RequestBody AssignmentDTO assignmentDTO,
+			@RequestPart("images") List<MultipartFile> images) {
 		AssignmentEntity entity = null;
 		try {
 			assignmentDTO.setId(id);
+			assignmentDTO.setFiles(images);
 			entity = _assignmentService.modify(assignmentDTO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// TODO Auto-generated catch block
 			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-					new APiResponse<>("error", "Data modification failed - " + e.getLocalizedMessage(), entity, null));
+					new APiResponse<>("error", "Data modification failed - " + e.getLocalizedMessage(), null, null));
 		}
 
 		return ResponseEntity.ok(new APiResponse<>("success", "Data modified successfully", entity, null));

@@ -1,6 +1,11 @@
 package com.ms.vidhyalebox.assignmentstudent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
 
@@ -32,4 +37,5 @@ public class StudentAssignmentDTO extends GenericDTO {
 
 	private String fileUrl;
 
+	private List<MultipartFile> files = new ArrayList<>();
 }

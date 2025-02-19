@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,12 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.sharedapi.generic.APiResponse;
-import com.ms.vidhyalebox.teacher.TeacherDTO;
 import com.ms.vidhyalebox.util.bl.IGenericService;
 import com.ms.vidhyalebox.util.domain.GenericEntity;
 import com.ms.vidhyalebox.util.rest.GenericController;
 
-@CrossOrigin(origins = "*")
 @RestController
 @Validated
 @RequestMapping("/staff")
@@ -61,10 +58,10 @@ public class StaffController extends GenericController<StaffDTO, Long> {
 		return ResponseEntity.ok(new APiResponse<>("success", "Staff registered successfully",
 				Map.of("staff FirstName", staffDto.getFirstName(), "staff LastName", staffDto.getLastName()), null));
 	}
-	
+
 	@PatchMapping(path = "/modify/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-	public ResponseEntity<APiResponse<Object>> modifyStaff(@PathVariable Long id, @RequestPart("staffDTO") StaffDTO staffDTO,
-			                       @RequestParam("image") MultipartFile image){
+	public ResponseEntity<APiResponse<Object>> modifyStaff(@PathVariable Long id,
+			@RequestPart("staffDTO") StaffDTO staffDTO, @RequestParam("image") MultipartFile image) {
 
 		try {
 			staffDTO.setId(id);
@@ -77,32 +74,21 @@ public class StaffController extends GenericController<StaffDTO, Long> {
 							.of("staff FirstName", staffDTO.getFirstName(), "staff LastName", staffDTO.getLastName()),
 							null));
 		}
-		
-		return ResponseEntity.ok(new APiResponse<>("success", "Staff registered successfully",
-				null, null));
-	}
-	
-	   @GetMapping("/pagination")
-	    public ResponseEntity<APiResponse<List<StaffEntity>>> filterStaff(
-	            @RequestParam String orgId,
-	            @RequestParam(defaultValue = "") String searchText,
-	            @RequestParam(defaultValue = "0") int page,
-	            @RequestParam(defaultValue = "10") int size,
-	            @RequestParam(defaultValue = "id") String sortBy,
-	            @RequestParam(defaultValue = "asc") String sortOrder
-	    ) {
 
-	        Page<StaffEntity> val  =   _iStaffService.search(orgId, searchText, page, size, sortBy, sortOrder);
-	        return ResponseEntity.ok(
-	                new APiResponse<>(
-	                        "success" ,
-	                        "Data fetched successfully" ,
-	                        _iStaffService.search(orgId, searchText, page, size, sortBy, sortOrder).getContent(),
-	                        Map.of(
-	                                "currentPage", val.getNumber(),
-	                                "totalPages", val.getTotalPages(),
-	                                "totalItems", val.getTotalElements()
-	                        )));
-	    }
+		return ResponseEntity.ok(new APiResponse<>("success", "Staff registered successfully", null, null));
+	}
+
+	@GetMapping("/pagination")
+	public ResponseEntity<APiResponse<List<StaffEntity>>> filterStaff(@RequestParam String orgId,
+			@RequestParam(defaultValue = "") String searchText, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy,
+			@RequestParam(defaultValue = "asc") String sortOrder) {
+
+		Page<StaffEntity> val = _iStaffService.search(orgId, searchText, page, size, sortBy, sortOrder);
+		return ResponseEntity.ok(new APiResponse<>("success", "Data fetched successfully",
+				_iStaffService.search(orgId, searchText, page, size, sortBy, sortOrder).getContent(),
+				Map.of("currentPage", val.getNumber(), "totalPages", val.getTotalPages(), "totalItems",
+						val.getTotalElements())));
+	}
 
 }

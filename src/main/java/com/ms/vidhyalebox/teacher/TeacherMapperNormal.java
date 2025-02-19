@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsEntity;
 import com.ms.vidhyalebox.leavesettings.LeaveSettingsRepo;
+import com.ms.vidhyalebox.leavesettings.LeaveSettingsserviceImpl;
 import com.ms.vidhyalebox.orgclient.IOrgClientRepo;
 import com.ms.vidhyalebox.orgclient.OrgClientEntity;
 import com.ms.vidhyalebox.payrollSettings.PayrollEntity;
@@ -27,6 +28,7 @@ import com.ms.vidhyalebox.salary.SalaryRepo;
 //import com.ms.vidhyalebox.utility.VidhyaleBoxUtil;
 //import com.ms.shared.util.util.domain.GenericEntity;
 import com.ms.vidhyalebox.sharedapi.generic.GenericDTO;
+import com.ms.vidhyalebox.staff.StaffServiceImpl;
 import com.ms.vidhyalebox.user.IUserRepo;
 import com.ms.vidhyalebox.user.IUserService;
 import com.ms.vidhyalebox.user.UserEntity;
@@ -56,7 +58,9 @@ public class TeacherMapperNormal implements IMapperNormal {
 	PayrollRepo payrollRepo;
 	@Autowired
 	SalaryRepo salaryrepo;
-
+	@Autowired
+	LeaveSettingsserviceImpl leaves;
+	
 	private static MultipartFile image;
 
 	public static MultipartFile getImage() {
@@ -176,7 +180,8 @@ public class TeacherMapperNormal implements IMapperNormal {
 			entity.setSchool(school);
 
 			LeaveSettingsEntity leavesettings = genericEntity != null ? entity.getLeavesettings() 
-					:  leave.getLeaveSettings(String.valueOf(school.getId())).get();
+					:  leave.findById(leaves.getLeaveSettings(String.valueOf(school.getId())).getId()).get();
+		//	logger.info(salary+"----Leave ----->>>>>"+leavesettings);
 			if (salary != null) {
 				salary = salaryrepo.save(salary);
 			}

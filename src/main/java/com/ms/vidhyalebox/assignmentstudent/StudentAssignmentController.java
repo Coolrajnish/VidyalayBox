@@ -55,32 +55,13 @@ public class StudentAssignmentController extends GenericController<StudentAssign
 				Map.of("currentPage", val.getNumber(), "totalPages", val.getTotalPages(), "totalItems",
 						val.getTotalElements())));
 	}
-	
-	
-	
-	@PatchMapping(path = "/modify/{id}")
-	public ResponseEntity<APiResponse<Object>> modify(@PathVariable Long id,
-			@RequestBody StudentAssignmentDTO saDTO) {
-		StudentAssignmentEntity entity = null;
-		try {
-			saDTO.setId(id);
-			entity = _assignmentService.modify(saDTO);
-		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO Auto-generated catch block
-			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-					new APiResponse<>("error", "Data modification failed - " + e.getLocalizedMessage(), entity, null));
-		}
-
-		return ResponseEntity.ok(new APiResponse<>("success", "Data modified successfully", entity, null));
-	}
-	
+//	
 //	@PostMapping(path = "/save", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 //	public ResponseEntity<APiResponse<Object>> save(@RequestPart("sassignmentDTO") StudentAssignmentDTO sassignmentDTO,
-//			                       @RequestParam("image") MultipartFile image){
-//
+//			                       @RequestParam("image") List<MultipartFile> image){
 //		try {
-//			_assignmentService.save(sassignmentDTO, image);
+//			sassignmentDTO.setFiles(image);
+//			_assignmentService.save(sassignmentDTO);
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //			// TODO Auto-generated catch block
